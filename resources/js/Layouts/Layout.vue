@@ -1,0 +1,20 @@
+<script setup>
+import Navbar from '@/Components/Navigations/Navbar.vue'
+import WhatsAppButton from '@/Components/WhatsAppButton.vue'
+import ThemeToggle from '@/Components/ThemeToggle.vue';
+import { onMounted, ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
+
+
+
+</script>
+<template>
+    <div class=" bg-light text-black dark:bg-dark dark:text-white">
+        <Navbar />
+        <main class="pt-16" > <!-- Padding to offset fixed navbar -->
+            <slot />
+            <WhatsAppButton />
+        </main>
+
+    </div>
+</template>
