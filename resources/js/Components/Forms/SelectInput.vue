@@ -53,4 +53,3 @@ defineProps({
     <small class="error" v-if="message">{{ message }}</small>
   </div>
 </template>
-

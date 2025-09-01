@@ -1,10 +1,11 @@
 <script setup>
-import FarmCover from '../../../images/farm-cover.png' // Replace with actual farming image
+import CompanyCover from '../../../images/tricycle.jpg'; // Replace with your actual image path
 </script>
 
 <template>
   <section class="py-12 md:py-20 bg-white">
     <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-10">
+
       <!-- Left Column: Image -->
       <div
         class="md:w-1/2"
@@ -13,11 +14,11 @@ import FarmCover from '../../../images/farm-cover.png' // Replace with actual fa
         data-aos-delay="200"
       >
         <img
-          :src="FarmCover"
-          alt="Maibere Ventures Nigeria Ltd - Farming & Livestock"
+          :src="CompanyCover"
+          alt="Texas Trust Multidynamic Inspection LTD - Reliable Product Sales & Credit Services"
           width="1024"
           height="879"
-          class="w-full h-auto rounded-lg shadow-md"
+          class="w-full h-auto rounded-lg shadow-md object-cover"
         />
       </div>
 
@@ -28,33 +29,30 @@ import FarmCover from '../../../images/farm-cover.png' // Replace with actual fa
         data-aos-duration="800"
         data-aos-delay="200"
       >
-        <h5 class="text-green-600 font-semibold text-sm uppercase mb-2">
-          Welcome to Maibere Ventures Nigeria Ltd
+        <h5 class="text-blue-600 font-semibold text-sm uppercase mb-2">
+          Welcome to Texas Trust Multidynamic Inspection LTD
         </h5>
 
         <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 leading-tight">
-          Fresh Farm Produce, Livestock & Agricultural Stock at Your Fingertips
+          Quality Products, Flexible Credit – Trusted Solutions for Every Need
         </h2>
 
         <div class="space-y-4 text-gray-600 mb-8">
           <p>
-            Maibere Ventures Nigeria Ltd connects farmers and buyers, offering a trusted
-            platform to buy and sell fresh farm produce, quality livestock, and essential
-            agricultural products.
+            Texas Trust Multidynamic Inspection LTD offers a wide range of high-demand products — from motorcycles and solar systems to land, electronics, and essential commodities — all available for <strong>cash or credit</strong>.
           </p>
           <p>
-            We partner with verified farmers to ensure you get the freshest products at
-            fair prices while supporting local agriculture.
+            We provide reliable, transparent, and flexible purchasing options, empowering individuals and businesses to acquire what they need today and pay conveniently over time.
           </p>
-          <p class="font-bold">
-            Join our marketplace and experience the best of farming, delivered to you.
+          <p class="font-bold text-gray-700">
+            Shop with confidence. Own today, pay smart tomorrow.
           </p>
         </div>
 
         <!-- CTA Button -->
         <a
           href="/products"
-          class="inline-block bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded transition-transform duration-300 transform hover:scale-105"
+          class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded transition-transform duration-300 transform hover:scale-105"
         >
           Browse Products
         </a>
@@ -62,3 +60,11 @@ import FarmCover from '../../../images/farm-cover.png' // Replace with actual fa
     </div>
   </section>
 </template>
+
+<style scoped>
+/* Optional: Ensure image maintains aspect ratio */
+img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+</style>

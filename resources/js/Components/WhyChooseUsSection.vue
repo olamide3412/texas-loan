@@ -1,5 +1,5 @@
 <script setup>
-import ProductImage from '../../images/farm-cover.png'; // Replace with an actual product image (e.g., motorcycles, rice bags, or solar)
+import ProductImage from '../../images/tricycle.jpg'; // Replace with an actual product image (e.g., motorcycles, rice bags, or solar)
 </script>
 
 <template>

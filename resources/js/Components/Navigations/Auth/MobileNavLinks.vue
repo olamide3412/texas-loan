@@ -11,13 +11,13 @@ const liClasses = 'block px-2 py-0 text-gray-700 hover:bg-gray-100 dark:text-gra
     </Link>
   </li>
   <li>
-    <Link :href="route('whatsAppResponse.index')" :class="liClasses" @click="$emit('close')">
-      Wa Responses
+    <Link :href="route('client.index')" :class="liClasses" @click="$emit('close')">
+      Clients
     </Link>
   </li>
   <li>
-    <Link :href="route('exchangeRate.index')" :class="liClasses" @click="$emit('close')">
-      Exchange Rate
+    <Link :href="route('product.index')" :class="liClasses" @click="$emit('close')">
+      Products
     </Link>
   </li>
   <li>

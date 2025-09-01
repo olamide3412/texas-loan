@@ -15,16 +15,14 @@ const liClasses = 'block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gra
                     Dashboard
                 </Link>
             </li>
-
             <li>
-                <Link :href="route('whatsAppResponse.index')" :class="liClasses">
-                    Wa Responses
+                <Link :href="route('client.index')" :class="liClasses">
+                    Clients
                 </Link>
             </li>
-
-             <li>
-                <Link :href="route('exchangeRate.index')" :class="liClasses">
-                    Exchange Rate
+            <li>
+                <Link :href="route('product.index')" :class="liClasses">
+                    Products
                 </Link>
             </li>
 

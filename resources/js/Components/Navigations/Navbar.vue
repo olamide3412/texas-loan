@@ -64,7 +64,7 @@ const toggle = () => (isOpen.value = !isOpen.value);
           <li><Link :href="route('shop')" @click="toggle">Shop</Link></li>
           <li><Link :href="route('contact')" @click="toggle">Contact</Link></li>
           <li><Link :href="route('faq')" @click="toggle">FAQ</Link></li>
-          <li><Link :href="route('login')" @click="toggle">Login</Link></li>
+          <li><Link v-if="!$page.props.auth.user" :href="route('login')" @click="toggle">Login</Link></li>
           <MobileNavLinks v-if="$page.props.auth.user" @close="toggle" />
         </ul>
       </div>

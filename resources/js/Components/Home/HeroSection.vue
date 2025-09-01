@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3';
 import LogoFull from '../../../images/logo-full.png';
-import RetailCover from '../../../images/farm-cover.png'; // Replace with retail image later
+import RetailCover from '../../../images/bag_of_maize.png'; // Replace with retail image later
 </script>
 
 <template>
