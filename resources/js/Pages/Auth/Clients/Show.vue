@@ -145,7 +145,7 @@ const deleteClient = () => {
             />
             <img
               v-else-if="props.client.photo"
-              :src="`/storage/${props.client.photo}`"
+              :src="props.client.client_photo"
               alt="Photo"
               class="w-full h-full object-cover"
             />

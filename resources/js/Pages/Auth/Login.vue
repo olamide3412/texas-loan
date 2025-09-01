@@ -34,13 +34,14 @@ const handleLogin = () => {
 
 </script>
 <template>
+
     <div class="min-h-screen  flex items-center justify-center px-4 my-6">
+
       <!-- Login Card -->
       <div
-        class="w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-lg p-22 space-y-6"
+        class="w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-lg p-5 space-y-6"
         data-aos="zoom-out"
-        data-aos-duration="600"
-      >
+        data-aos-duration="600">
         <!-- Logo -->
         <div class="text-center">
           <img

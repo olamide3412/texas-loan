@@ -43,7 +43,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="container-xl lg:container m-auto p-5">
+  <div class="container-xl lg:container m-auto p-0">
     <h1 class="title dark:text-white">Add Product</h1>
 
     <form @submit.prevent="submit">
@@ -69,38 +69,37 @@ const submit = () => {
           placeholder="e.g. 499.99"
         />
 
+      </div>
         <!-- Description -->
         <div class="col-span-2 flex flex-col gap-1">
-          <label class="text-sm font-medium">Description (optional)</label>
-          <textarea
+            <label class="text-sm font-medium">Description (optional)</label>
+            <textarea
             v-model="form.description"
             rows="3"
             class="rounded-md border-gray-300 dark:border-gray-600
-                   dark:bg-gray-800 dark:text-gray-100 text-sm w-full"
-            placeholder="Short description about the product..."
-          ></textarea>
-          <p v-if="form.errors.description" class="text-red-600 text-xs">{{ form.errors.description }}</p>
+                    dark:bg-gray-800 dark:text-gray-100 text-sm w-full"
+            placeholder="Short description about the product..."></textarea>
+            <p v-if="form.errors.description" class="text-red-600 text-xs">{{ form.errors.description }}</p>
         </div>
 
         <!-- Photo -->
         <div class="col-span-2 flex flex-col gap-2">
-          <label class="text-sm font-medium">Photo (PNG/JPG, ≤ 5MB)</label>
-          <input
+            <label class="text-sm font-medium">Photo (PNG/JPG, ≤ 5MB)</label>
+            <input
             type="file"
             accept="image/png,image/jpeg"
             @change="onPhotoChange"
             class="block w-full text-sm file:mr-4 file:py-2 file:px-4
-                   file:rounded file:border-0 file:bg-gray-100 dark:file:bg-gray-800
-                   file:text-gray-700 dark:file:text-gray-200 hover:file:bg-gray-200
-                   dark:hover:file:bg-gray-700"
-          />
-          <p v-if="form.errors.photo" class="text-red-600 text-xs">{{ form.errors.photo }}</p>
+                    file:rounded file:border-0 file:bg-gray-100 dark:file:bg-gray-800
+                    file:text-gray-700 dark:file:text-gray-200 hover:file:bg-gray-200
+                    dark:hover:file:bg-gray-700"
+            />
+            <p v-if="form.errors.photo" class="text-red-600 text-xs">{{ form.errors.photo }}</p>
 
-          <div v-if="previewUrl" class="mt-2">
+            <div v-if="previewUrl" class="mt-2">
             <img :src="previewUrl" alt="Preview" class="h-24 w-24 rounded object-cover ring-1 ring-gray-200 dark:ring-gray-700" />
-          </div>
+            </div>
         </div>
-      </div>
 
       <div class="flex justify-center py-6">
         <button class="btn-primary" :disabled="form.processing">
@@ -108,6 +107,7 @@ const submit = () => {
           <span v-else>Add Product</span>
         </button>
       </div>
+
     </form>
   </div>
 </template>

@@ -68,7 +68,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="container-xl lg:container m-auto p-5">
+  <div class="container-xl lg:container m-auto p-0">
     <h1 class="title dark:text-white">Register Client</h1>
 
     <form @submit.prevent="submit">
