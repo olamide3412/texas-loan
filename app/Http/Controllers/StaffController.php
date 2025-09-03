@@ -25,13 +25,11 @@ class StaffController extends Controller
 
         $q = $request->get('q', '');
 
-          $staffs = Staff::latest()->with(['branch'])
-                        ->where('last_name', 'LIKE', '%'.$q.'%')
+          $staffs = Staff::latest()->where('last_name', 'LIKE', '%'.$q.'%')
                         ->orWhere('first_name', 'LIKE', '%'.$q.'%')
                         ->orWhere('other_name', 'LIKE', '%'.$q.'%')
                         ->orWhere('email', 'LIKE', '%'.$q.'%')
                         ->orWhere('phone_number', 'LIKE', '%'.$q.'%')
-                        ->orWhere('status', 'LIKE', '%'.$q.'%')
                         ->orWhere('nin', 'LIKE', '%'.$q.'%')
                         ->orWhere('bvn', 'LIKE', '%'.$q.'%')
                         ->paginate(25);

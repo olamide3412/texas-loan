@@ -24,7 +24,7 @@ const toggle = () => (isOpen.value = !isOpen.value);
 
       <ul class="hidden md:flex space-x-4">
         <NavLink :href="route('home')" :active="$page.component === 'Home'">Home</NavLink>
-        <NavLink :href="route('about')" :active="$page.component === 'About'">About Us</NavLink>
+        <NavLink :href="route('about')" :active="$page.component === 'About'">About</NavLink>
         <NavLink :href="route('shop')" :active="$page.component === 'Shop'">Shop</NavLink>
         <NavLink :href="route('contact')" :active="$page.component === 'Contact'">Contact</NavLink>
         <NavLink :href="route('faq')" :active="$page.component === 'FAQ'">FAQ</NavLink>

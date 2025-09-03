@@ -39,7 +39,7 @@ class Client extends Model
             //return Storage::url($photo);
             return Storage::temporaryUrl($this->attributes['photo'], now()->addMinutes(5));
         }
-        return Vite::asset('resources/images/client_default.jpg'); //asset('images/students/client_default.jpg'); // Provide a default image path if no photo is uploaded
+        return null; // Vite::asset('resources/images/client_default.jpg'); // Provide a default image path if no photo is uploaded
     }
 
     // A client can have many orders

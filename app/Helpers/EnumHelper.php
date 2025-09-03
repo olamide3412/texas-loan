@@ -12,7 +12,7 @@ class EnumHelper
             if (enum_exists($enumClass)) {
                 $result[$key] = collect($enumClass::cases())->map(fn($case) => [
                     'value' => $case->value,
-                    'label' => ucfirst(strtolower($case->name)),
+                    'label' => ucfirst(strtolower($case->value)), //ucfirst(strtolower($case->name)),
                 ]);
             }
         }

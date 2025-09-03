@@ -44,6 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function (){
     // Route::put('/exchange-rate/{exchangeRate}', [ExchangeRateController::class, 'update'])->name('exchangeRate.update');
     // Route::delete('/exchange-rate/{exchangeRate}', [ExchangeRateController::class, 'destroy'])->name('exchangeRate.destroy');
 
+    //I dont need must of this user route cause staff link will be use to create those route
     Route::get('/users', [UserController::class,'index'])->name('users.index');
     Route::post('/users', [UserController::class,'store'])->name('users.store');
     Route::get('/users/{user}', [UserController::class,'show'])->name('users.show');
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'admin'])->group(function (){
     Route::post('/users/reset-password/{user}', [UserController::class,'resetPassword'])->name('users.resetPassword');
     Route::post('/users/update-password/{user}', [UserController::class,'updatePassword'])->name('users.updatePassword');
     Route::get('/profile', [UserController::class,'profile'])->name('users.profile');
+
 
     Route::get('/logs', [LogController::class, 'index'])->name('log.index');
 
@@ -62,3 +64,4 @@ Route::middleware(['auth', 'admin'])->group(function (){
 require __DIR__ . '/client.php';
 require __DIR__ . '/product.php';
 require __DIR__ . '/order.php';
+require __DIR__ . '/staff.php';

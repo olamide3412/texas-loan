@@ -31,6 +31,7 @@ class ClientController extends Controller
                     ->orWhere('bvn','like', '%'.$q.'%');
         })->orderBy($orderBy, $orderDir)->paginate(5)->withQueryString();
 
+        //dd($clients->toArray());
         return inertia('Auth/Clients/Index',[
             'clients' => $clients,
         ]);

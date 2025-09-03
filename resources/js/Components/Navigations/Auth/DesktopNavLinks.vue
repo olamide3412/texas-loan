@@ -6,7 +6,7 @@ const liClasses = 'block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gra
     <!-- Admin Dropdown Menu -->
     <li class="relative group" >
         <button class=" px-0 py-0  transition-all">
-            User Menu
+            Menu
         </button>
         <!-- Dropdown menu (hidden by default, shown on hover) -->
         <ul class="absolute bg-white dark:bg-gray-900 left-0 mt-0 w-48  rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-200 z-50">
@@ -23,6 +23,16 @@ const liClasses = 'block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gra
             <li>
                 <Link :href="route('product.index')" :class="liClasses">
                     Products
+                </Link>
+            </li>
+            <li>
+                <Link :href="route('order.index')" :class="liClasses">
+                    Orders
+                </Link>
+            </li>
+            <li>
+                <Link :href="route('staff.index')" :class="liClasses">
+                    Staff
                 </Link>
             </li>
 

@@ -11,6 +11,7 @@ const emit = defineEmits(['change-active-tab'])
 
 const genderEmuns = usePage().props.enums.genders;
 const occupationEnums = usePage().props.enums.occupations;
+const stateEnums = usePage().props.enums.states;
 
 const previewUrl = ref(null)
 
@@ -152,10 +153,11 @@ const submit = () => {
           :message="form.errors.local_government"
           :required="true"
         />
-        <TextInput
+        <SelectInput
           name="state"
           label="State"
           v-model="form.state"
+          :options="stateEnums"
           :message="form.errors.state"
           :required="true"
         />
