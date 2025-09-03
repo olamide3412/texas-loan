@@ -21,6 +21,16 @@ const liClasses = 'block px-2 py-0 text-gray-700 hover:bg-gray-100 dark:text-gra
     </Link>
   </li>
   <li>
+    <Link :href="route('order.index')" :class="liClasses" @click="$emit('close')">
+      Orders
+    </Link>
+  </li>
+  <li>
+    <Link :href="route('staff.index')" :class="liClasses" @click="$emit('close')">
+      Staff
+    </Link>
+  </li>
+  <li>
     <Link :href="route('log.index')" :class="liClasses" @click="$emit('close')">
       Logs
     </Link>
