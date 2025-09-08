@@ -7,16 +7,16 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 import { formatDate } from './Utils/dateFormat';
-//import AOS from 'aos';
+import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { createPinia } from 'pinia';
 import { useThemeStore } from './Stores/themeStore';
 
 
-// AOS.init({
-//     duration: 1000,
-//     once: true,
-// });
+AOS.init({
+    duration: 1000,
+    once: true,
+});
 
 
 
@@ -43,38 +43,13 @@ createInertiaApp({
         app.config.globalProperties.$formatDate = formatDate;
 
         app.component('Head', Head)
-            .component('Link', Link);
-
-        // Dynamically import heavy dependencies
-        Promise.all([
-            // Import AOS only when needed (lazy load)
-            import('aos').then((AOS) => {
-                AOS.init({
-                    duration: 1000,
-                    once: true,
-                });
-                return AOS;
-            }).catch(() => {
-                console.warn('AOS failed to load');
-            }),
-
-            // Dynamically import FontAwesome
-            import('./fontawesome').then(({ FontAwesomeIcon }) => {
-                app.component('font-awesome-icon', FontAwesomeIcon);
-            }).catch(() => {
-                console.warn('FontAwesome failed to load');
-            })
-        ]).then(() => {
-            app.mount(el);
-        }).catch(() => {
-            app.mount(el);
-        });
+        .component('Link', Link);
 
         // ✅ Dynamically import FontAwesome to split the chunk
-        // import('./fontawesome').then(({ FontAwesomeIcon }) => {
-        //     app.component('font-awesome-icon', FontAwesomeIcon)
-        //      app.mount(el);
-        // });
+        import('./fontawesome').then(({ FontAwesomeIcon }) => {
+            app.component('font-awesome-icon', FontAwesomeIcon)
+             app.mount(el);
+        });
 
        // app.mount(el)
     },
