@@ -13,7 +13,7 @@ import { usePage } from '@inertiajs/vue3';
         <Navbar />
         <main class="pt-16" > <!-- Padding to offset fixed navbar -->
             <slot />
-            <WhatsAppButton />
+            <WhatsAppButton v-if="!$page.props.auth.user" />
         </main>
 
     </div>

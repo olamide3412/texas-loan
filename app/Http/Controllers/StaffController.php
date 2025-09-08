@@ -35,13 +35,10 @@ class StaffController extends Controller
                         ->paginate(25);
 
 
-        if ($request->ajax()) {
-            return response()->json([
-                'html' => view('staffs.include.staff-table', compact('staffs'))->render(),
-            ]);
-        }
 
-        return view('staffs.index', compact('staffs'));
+        return inertia('Auth/Staffs/Index',[
+            'staffs' => $staffs,
+        ]);
     }
     public function create(){
 

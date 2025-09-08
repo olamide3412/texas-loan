@@ -7,7 +7,12 @@ defineProps({
     counts:{
         type:Object,
         required: true
+    },
+    orderStats:{
+        type:Object,
+        required: true
     }
+
 })
 
 </script>
@@ -21,12 +26,16 @@ defineProps({
         <div class="container mx-auto p-6">
             <h3 class="text-2xl font-bold mb-3">Statistics</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+
+                <CountCard title="Pending Orders" :count="orderStats.pending_orders.toString()" :icon="IconUtils.logIcon()" />
+                <CountCard title="Processing Orders" :count="orderStats.processing_orders.toString()" :icon="IconUtils.logIcon()" />
+                <CountCard title="Completed orders" :count="orderStats.completed_orders.toString()" :icon="IconUtils.logIcon()" />
+                <CountCard title="Rejected Orders" :count="orderStats.rejected_orders.toString()" :icon="IconUtils.logIcon()" />
+                <CountCard title="Cancelled Orders" :count="orderStats.cancelled_orders.toString()" :icon="IconUtils.logIcon()" />
+
                 <CountCard title="Users" :count="counts.users.toString()" :icon="IconUtils.userIcon()" />
                 <CountCard title="Administrator" :count="counts.admins.toString()" :icon="IconUtils.adminIcon()" />
                 <CountCard title="Super Administrator" :count="counts.superAdmins.toString()" :icon="IconUtils.superAdminIcon()" />
-                <CountCard title="Active Response" :count="counts.activeResponseCount.toString()" :icon="IconUtils.logIcon()" />
-                <CountCard title="Inactive Response" :count="counts.inactiveResponseCount.toString()" :icon="IconUtils.logIcon()" />
-                <CountCard title="Exchange Rate" :count="counts.exchangeRateCount.toString()" :icon="IconUtils.logIcon()" />
                 <CountCard title="Logs" :count="counts.logs.toString()" :icon="IconUtils.logIcon()" />
             </div>
         </div>

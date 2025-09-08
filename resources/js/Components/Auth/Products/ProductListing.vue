@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { Link } from '@inertiajs/vue3'
+import { formatCurrency } from '../../../Utils/formatCurrency'
 
 const props = defineProps({
   product: {
@@ -51,7 +52,7 @@ const productImage = computed(() => {
             {{ serial }} -> {{ product.name }}
           </h3>
           <p class="text-sm text-gray-600 dark:text-gray-200">
-            <strong>Price:</strong> ₦{{ product.price }}
+            <strong>Price:</strong> ₦{{ formatCurrency(product.price) }}
           </p>
           <p class="text-sm text-gray-600 dark:text-gray-200">
             <strong>Description:</strong> {{ product.description ?? 'NIL' }}

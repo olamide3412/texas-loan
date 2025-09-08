@@ -47,6 +47,9 @@ class User extends Authenticatable
         ];
     }
 
+    public function staff(){
+        return $this->hasOne(Staff::class);
+    }
 
      // Orders created by user
     public function createdOrders(): HasMany

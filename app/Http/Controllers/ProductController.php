@@ -69,7 +69,7 @@ class ProductController extends Controller
             $quality = $fileSize > 2 * 1024 * 1024 ? 50 : 75;
 
             $encodedImage = $image->encode(new AutoEncoder(quality: $quality));
-            Storage::put('products/photos/' . $imageName, $encodedImage);
+            Storage::disk('public')->put('products/photos/' . $imageName, $encodedImage);
 
             $validatedData['photo'] = 'products/photos/' . $imageName;
         }
@@ -121,7 +121,7 @@ class ProductController extends Controller
             $quality = $fileSize > 2 * 1024 * 1024 ? 50 : 75;
 
             $encodedImage = $image->encode(new AutoEncoder(quality: $quality));
-            Storage::put('products/photos/' . $imageName, $encodedImage);
+            Storage::disk('public')->put('products/photos/' . $imageName, $encodedImage);
 
             $validatedData['photo'] = 'products/photos/' . $imageName;
         }

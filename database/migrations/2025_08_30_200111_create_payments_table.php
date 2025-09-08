@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete();
-            $table->string('order_ref')->unique();
+            $table->string('order_ref')->nullable()->unique();
             $table->decimal('amount', 10, 2);
             $table->dateTime('payment_date')->default(now());
             $table->enum('payment_method', array_map(fn($status) => $status->value, PaymentMethodEnums::cases()));

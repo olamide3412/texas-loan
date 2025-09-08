@@ -12,4 +12,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/orders/{order}', [OrderController::class, 'update'])->name('order.update');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('order.destroy');
 
+    Route::get('/orders/edit/{order}', [OrderController::class, 'edit'])->name('order.edit');
+
+    // web.php
+    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('order.update.status');
+    Route::post('/orders/{order}/payment', [OrderController::class, 'updatePayment'])->name('order.update.payment');
+
 });

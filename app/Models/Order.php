@@ -21,6 +21,12 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+     // Each order has many order items
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     // If order has employment details (for employed clients)
     public function employmentDetail(): HasOne
     {

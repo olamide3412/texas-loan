@@ -3,6 +3,7 @@ import TextInput from '@/Components/Forms/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import { useToast } from 'vue-toastification';
+import { formatCurrency } from '../../../Utils/formatCurrency';
 
 const activeTab = ref('show');
 const toast = useToast();
@@ -92,7 +93,7 @@ const deleteProduct = () => {
 
           <div>
             <h1 class="text-2xl font-semibold">{{ props.product.name }}</h1>
-            <p class="text-gray-600 dark:text-gray-100">Price: ₦{{ props.product.price }}</p>
+            <p class="text-gray-600 dark:text-gray-100">Price: ₦{{ formatCurrency(props.product.price)  }}</p>
             <p class="text-gray-600 dark:text-gray-100">Description: {{ props.product.description ?? 'N/A' }}</p>
           </div>
         </div>

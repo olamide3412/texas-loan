@@ -4,6 +4,7 @@ import TextInput from '@/Components/Forms/TextInput.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { useToast } from 'vue-toastification';
+import { formatCurrency } from '../../../Utils/formatCurrency';
 
 const activeTab = ref('show');
 const toast = useToast();
@@ -178,7 +179,7 @@ const deleteClient = () => {
           <p><strong>Residential Address:</strong> {{ props.client.residential_address ?? 'Nill' }}</p>
           <p><strong>Local Government:</strong> {{ props.client.local_government ?? 'Nill' }}</p>
           <p><strong>State:</strong> {{ props.client.state ?? 'Nill' }}</p>
-          <p><strong>Annual Income:</strong> {{ props.client.annual_income ?? '0.00' }}</p>
+          <p><strong>Annual Income:</strong> {{ formatCurrency(props.client.annual_income ?? '0.00') }}</p>
 
           <p class="mt-3"><strong>Created On:</strong> {{ $formatDate(props.client.created_at) }}</p>
           <p><strong>Last Updated On:</strong> {{ $formatDate(props.client.updated_at) }}</p>

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnums;
 use App\Enums\RoleEnums;
 use App\Models\Log;
+use App\Models\Order;
+use App\Models\Payment;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -27,11 +31,34 @@ class DashboardController extends Controller
                 'users' => $usersCount,
                 'admins' => $adminsCount,
                 'superAdmins' => $superAdminsCount,
-                'activeResponseCount' => $activeResponseCount,
-                'inactiveResponseCount' => $inactiveResponseCount,
-                'exchangeRateCount'  =>  $exchangeRateCount,
                 'logs' => $logsCount,
+
             ],
+            'orderStats' => [
+                'pending_orders' => Order::where('status', OrderStatusEnums::Pending->value)->count(),
+                'processing_orders' => Order::where('status', OrderStatusEnums::Processing->value)->count(),
+                'completed_orders' => Order::where('status', OrderStatusEnums::Completed->value)->count(),
+                'rejected_orders' => Order::where('status', OrderStatusEnums::Rejected->value)->count(), // If you have rejected status
+                'cancelled_orders' => Order::where('status', OrderStatusEnums::Cancelled->value)->count(),
+            ],
+            'paymentStats' => [
+                'today' => Payment::whereDate('payment_date', Carbon::today())
+                         ->where('payment_status', 'success')
+                         ->sum('amount'),
+                'yesterday' => Payment::whereDate('payment_date', Carbon::yesterday())
+                                    ->where('payment_status', 'success')
+                                    ->sum('amount'),
+                'this_month' => Payment::whereMonth('payment_date', Carbon::now()->month)
+                                    ->whereYear('payment_date', Carbon::now()->year)
+                                    ->where('payment_status', 'success')
+                                    ->sum('amount'),
+                'this_year' => Payment::whereYear('payment_date', Carbon::now()->year)
+                                    ->where('payment_status', 'success')
+                                    ->sum('amount'),
+                'total_revenue' => Payment::where('payment_status', 'success')->sum('amount'),
+                'successful_payments' => Payment::where('payment_status', 'success')->count(),
+                'failed_payments' => Payment::where('payment_status', 'failed')->count(),
+            ]
         ]);
     }
 }
