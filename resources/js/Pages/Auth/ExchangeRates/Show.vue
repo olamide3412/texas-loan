@@ -2,7 +2,6 @@
 import SelectInput from '@/Components/Forms/SelectInput.vue';
 import TextInput from '@/Components/Forms/TextInput.vue';
 import TagInput from '@/Components/Forms/TagInput.vue'
-import TriggerTags from '@/Components/Auth/WhatsAppResponses/TriggerTags.vue'
 import { useForm, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import { ref } from 'vue';
