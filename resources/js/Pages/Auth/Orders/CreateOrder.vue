@@ -326,7 +326,7 @@ const submit = () => {
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <SelectInput
-          label="Payment Type *"
+          name="Payment Type "
           v-model="form.payment_type"
           :options="paymentTypes"
           :required="true"

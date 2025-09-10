@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PaymentMethodEnums;
+use App\Enums\PaymentStatusEnums;
 use App\Models\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -16,11 +17,12 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Order::class)->constrained()->cascadeOnDelete();
-            $table->string('order_ref')->nullable()->unique();
+            $table->string('tx_ref')->nullable()->unique();
+            $table->string('flw_ref')->nullable(); // I just added it
             $table->decimal('amount', 10, 2);
             $table->dateTime('payment_date')->default(now());
-            $table->enum('payment_method', array_map(fn($status) => $status->value, PaymentMethodEnums::cases()));
-            $table->enum('payment_status', ['success','failed']);
+            $table->enum('payment_method', array_map(fn($method) => $method->value, PaymentMethodEnums::cases()));
+            $table->enum('payment_status', array_map(fn($status) => $status->value, PaymentStatusEnums::cases()));
             $table->timestamps();
         });
     }

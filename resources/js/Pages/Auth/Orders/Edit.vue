@@ -140,10 +140,10 @@ const completeOrder = () => {
         <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg mb-6">
           <h2 class="text-lg font-semibold mb-4">Order Status</h2>
 
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
             <button
               @click="updateStatus('processing')"
-              :disabled="order.status === 'processing'"
+              :disabled="order.status !== 'pending' "
               class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Approve

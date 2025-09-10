@@ -2,6 +2,9 @@
 import { Link } from '@inertiajs/vue3';
 import LogoFull from '../../../images/logo-full.png';
 import RetailCover from '../../../images/bag_of_maize.png'; // Replace with retail image later
+
+const bagOfRiceImageLink = '/images/products/laptop.png';
+
 </script>
 
 <template>
@@ -9,7 +12,7 @@ import RetailCover from '../../../images/bag_of_maize.png'; // Replace with reta
   <section class="block md:hidden px-4 py-6">
     <!-- Image First -->
     <div data-aos="zoom-out" data-aos-delay="500" data-aos-duration="1000" class="mb-6">
-      <img :src="RetailCover" alt="Products" class="w-full custom-bounce rounded-lg" />
+      <img :src="bagOfRiceImageLink" alt="Products" class="w-full custom-bounce rounded-lg" />
     </div>
     <!-- Text Below -->
     <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="0" class="space-y-4">
@@ -52,7 +55,7 @@ import RetailCover from '../../../images/bag_of_maize.png'; // Replace with reta
 
     <!-- Image Right -->
     <div data-aos="zoom-out" data-aos-delay="500" data-aos-duration="1000" data-aos-anchor=".other-element" class="w-1/2 flex justify-center">
-      <img :src="RetailCover" alt="Products" class="w-full max-w-md custom-bounce rounded-lg" />
+      <img :src="bagOfRiceImageLink" alt="Products" class="w-full max-w-md custom-bounce rounded-lg" />
     </div>
   </section>
 </template>

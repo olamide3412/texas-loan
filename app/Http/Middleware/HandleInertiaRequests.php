@@ -49,6 +49,7 @@ class HandleInertiaRequests extends Middleware
                 'email' => 'support@texasloan.ng',
                 'location' => 'Kano State, Nigeria'
             ],
+            'csrf_token' => csrf_token(),
         ];
     }
 }

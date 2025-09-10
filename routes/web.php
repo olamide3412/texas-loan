@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,7 +15,6 @@ Route::get('/', function () {
 Route::inertia('/about-us','About')->name('about');
 Route::inertia('/rate','Rate')->name('rate');
 Route::inertia('/faq','FAQ')->name('faq');
-Route::inertia('/contact','Home')->name('contact');
 
 
 Route::inertia('/login','Auth/Login')->name('login');
@@ -26,7 +26,10 @@ Route::inertia('/products','Home')->name('products');
 Route::inertia('/livestock','Home')->name('livestock');
 Route::inertia('/shop','Home')->name('shop');
 
-
+// Payment routes
+Route::post('/orders/{order}/initiate-payment', [PaymentController::class, 'initiatePayment'])->middleware('auth')->name('order.payment.initiate');
+Route::get('/payment/verify/{order}', [PaymentController::class, 'verifyPayment'])->name('payment.verify');
+Route::post('/payment/webhook', [PaymentController::class, 'flwWebHook'])->name('payment.webhook');
 
 Route::middleware(['auth', 'admin'])->group(function (){
 

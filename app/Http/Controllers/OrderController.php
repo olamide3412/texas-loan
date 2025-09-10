@@ -19,7 +19,7 @@ use Inertia\Inertia;
 class OrderController extends Controller
 {
 
-        public function index(Request $request)
+    public function index(Request $request)
     {
          $query = Order::with('items.product', 'client')->latest();
 
@@ -67,7 +67,7 @@ class OrderController extends Controller
     public function create(Client $client)
     {
         //dd($client->toArray());
-        $products = Product::all();
+        $products = Product::where('is_available', true)->get();
         return Inertia::render('Auth/Orders/CreateOrder', [
             'client' => $client,
             'products' => $products,
@@ -78,7 +78,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //dd($request->toArray());
-
         $request->validate([
             'client_id' => 'required|exists:clients,id',
             'products'  => 'required|array',
@@ -107,8 +106,8 @@ class OrderController extends Controller
                 'client_id'          => $request->client_id,
                 'order_ref'          => strtoupper(Str::random(10)),
                 'total_price'        => $totalPrice,
-                'remaining_balance'  => $request->payment_type === PaymentTypeEnums::Instant->value ? 0 : $totalPrice,
-                'amount_paid'        => $request->payment_type === PaymentTypeEnums::Instant->value ? $totalPrice : 0,
+                'remaining_balance'  => $totalPrice, //$request->payment_type === PaymentTypeEnums::Instant->value ? 0 : $totalPrice,
+                'amount_paid'        => 0, //$request->payment_type === PaymentTypeEnums::Instant->value ? $totalPrice : 0,
                 'payment_type'       => $request->payment_type,
                 'repayment_frequency'=> $request->repayment_frequency ?? 'monthly',
                 'repayment_term'     => $request->repayment_term ?? 1,
@@ -144,12 +143,14 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Order created successfully!!!');
+            if($order->payment_type === PaymentTypeEnums::Instant->value){
+                //dd($order);
+                return inertia('Auth/Orders/Instant/OrderPayment', [
+                    'order' => $order,
+                ]);
+            }
 
-            // return response()->json([
-            //     'message' => 'Order created successfully',
-            //     'order'   => $order->load('items', 'employmentDetail')
-            // ], 201);
+            return redirect()->back()->with('success', 'Order created successfully!!!');
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -160,9 +161,6 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Show a specific order.
-     */
     public function show(Order $order)
     {
         $order->load('items.product', 'employmentDetail', 'client');

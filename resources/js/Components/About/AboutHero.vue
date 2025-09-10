@@ -1,5 +1,6 @@
 <script setup>
 import CompanyCover from '../../../images/tricycle.jpg'; // Replace with your actual image path
+const laptopImagePath = '/images/products/laptop.png'
 </script>
 
 <template>
@@ -14,7 +15,7 @@ import CompanyCover from '../../../images/tricycle.jpg'; // Replace with your ac
         data-aos-delay="200"
       >
         <img
-          :src="CompanyCover"
+          :src="laptopImagePath"
           alt="Texas Trust Multidynamic Inspection LTD - Reliable Product Sales & Credit Services"
           width="1024"
           height="879"

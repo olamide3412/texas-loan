@@ -26,9 +26,8 @@ const toggle = () => (isOpen.value = !isOpen.value);
         <NavLink :href="route('home')" :active="$page.component === 'Home'">Home</NavLink>
         <NavLink :href="route('about')" :active="$page.component === 'About'">About</NavLink>
         <NavLink :href="route('shop')" :active="$page.component === 'Shop'">Shop</NavLink>
-        <NavLink :href="route('contact')" :active="$page.component === 'Contact'">Contact</NavLink>
         <NavLink :href="route('faq')" :active="$page.component === 'FAQ'">FAQ</NavLink>
-        <NavLink :href="route('login')" :active="$page.component === 'Login'">Login</NavLink>
+        <NavLink v-if="!$page.props.auth.user" :href="route('login')" :active="$page.component === 'Login'">Login</NavLink>
         <DesktopNavLinks v-if="$page.props.auth.user" />
       </ul>
 
@@ -62,7 +61,6 @@ const toggle = () => (isOpen.value = !isOpen.value);
           <li><Link :href="route('home')" @click="toggle">Home</Link></li>
           <li><Link :href="route('about')" @click="toggle">About Us</Link></li>
           <li><Link :href="route('shop')" @click="toggle">Shop</Link></li>
-          <li><Link :href="route('contact')" @click="toggle">Contact</Link></li>
           <li><Link :href="route('faq')" @click="toggle">FAQ</Link></li>
           <li><Link v-if="!$page.props.auth.user" :href="route('login')" @click="toggle">Login</Link></li>
           <MobileNavLinks v-if="$page.props.auth.user" @close="toggle" />
