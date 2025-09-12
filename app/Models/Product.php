@@ -12,8 +12,11 @@ class Product extends Model
 
     public function getProductPhotoAttribute(){
         $photo = $this->attributes['photo'] ?? '';
+        // if (Storage::disk('public')->exists($photo)) {
+        //     return asset('storage/' . $photo);
+        // }
         if (!empty($photo) && Storage::exists($photo)) {
-            return Storage::temporaryUrl($this->attributes['photo'], now()->addMinutes(30));
+            return Storage::temporaryUrl($this->attributes['photo'], now()->addMinutes(10));
         }
         return null; // Vite::asset('resources/images/client_default.jpg'); // Provide a default image path if no photo is uploaded
     }

@@ -70,7 +70,7 @@ class ProductController extends Controller
 
             $encodedImage = $image->encode(new AutoEncoder(quality: $quality));
             Storage::disk('public')->put('products/photos/' . $imageName, $encodedImage);
-
+            Storage::put('products/photos/' . $imageName, $encodedImage);
             $validatedData['photo'] = 'products/photos/' . $imageName;
         }
 
@@ -86,6 +86,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        dd($product->toArray());
         return inertia('Auth/Products/Show',[
             'product' => $product,
         ]);
@@ -123,7 +124,7 @@ class ProductController extends Controller
 
             $encodedImage = $image->encode(new AutoEncoder(quality: $quality));
             Storage::disk('public')->put('products/photos/' . $imageName, $encodedImage);
-
+            Storage::put('products/photos/' . $imageName, $encodedImage);
             $validatedData['photo'] = 'products/photos/' . $imageName;
         }
 

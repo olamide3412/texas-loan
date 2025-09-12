@@ -97,7 +97,7 @@ const deleteClient = () => {
     <!-- SHOW TAB -->
     <div v-if="activeTab === 'show'">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-md rounded-lg p-6">
-        <div class="flex items-center space-x-4">
+        <div class="flex flex-col sm:flex-row md:flex-row items-start gap-4">
           <div class="w-24 h-24 rounded overflow-hidden bg-gray-100">
             <!-- try showing existing photo from storage, fallback to placeholder -->
             <img

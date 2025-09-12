@@ -79,7 +79,7 @@ const deleteProduct = () => {
     <!-- SHOW TAB -->
     <div v-if="activeTab === 'show'">
       <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-md rounded-lg p-6">
-        <div class="flex items-center space-x-4">
+        <div class="flex flex-col sm:flex-row md:flex-row items-start gap-4">
           <div class="w-28 h-28 rounded overflow-hidden bg-gray-100">
             <img
               v-if="previewUrl"
@@ -89,7 +89,7 @@ const deleteProduct = () => {
             />
             <img
               v-else-if="props.product.photo"
-              :src="product_photo"
+              :src="props.product.product_photo"
               alt="Photo"
               class="w-full h-full object-cover"
             />
@@ -151,7 +151,7 @@ const deleteProduct = () => {
 
               <div v-if="hasPhoto" class="mt-2">
                 <img
-                  :src="previewUrl ? previewUrl : product_photo"
+                  :src="previewUrl ? previewUrl : props.product.product_photo"
                   alt="Preview"
                   class="h-24 w-24 rounded object-cover ring-1 ring-gray-200 dark:ring-gray-700"
                 />
