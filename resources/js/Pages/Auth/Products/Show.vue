@@ -21,7 +21,7 @@ const form = useForm({
   name: props.product.name ?? '',
   description: props.product.description ?? '',
   price: props.product.price ?? '',
-  photo: null, // for new upload
+  photo: null, // for new upload :src="`/storage/${props.product.photo}`"
 });
 
 const hasPhoto = computed(() => !!props.product.photo || !!previewUrl.value);
@@ -89,7 +89,7 @@ const deleteProduct = () => {
             />
             <img
               v-else-if="props.product.photo"
-              :src="`/storage/${props.product.photo}`"
+              :src="product_photo"
               alt="Photo"
               class="w-full h-full object-cover"
             />
@@ -151,7 +151,7 @@ const deleteProduct = () => {
 
               <div v-if="hasPhoto" class="mt-2">
                 <img
-                  :src="previewUrl ? previewUrl : `/storage/${props.product.photo}`"
+                  :src="previewUrl ? previewUrl : product_photo"
                   alt="Preview"
                   class="h-24 w-24 rounded object-cover ring-1 ring-gray-200 dark:ring-gray-700"
                 />
