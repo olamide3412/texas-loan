@@ -96,6 +96,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        //dd($request->toArray());
         $rules = [
             'name' => ['required', 'string', 'max:255', Rule::unique('products', 'name')->ignore($product->id)],
             'description' => ['nullable', 'string'],

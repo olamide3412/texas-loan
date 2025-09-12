@@ -49,18 +49,6 @@ const isEnable = computed(() => {
   return props.client.verification_status === true;
 });
 
-function onPhotoChangeNEW(e) {
-  const file = e.target.files?.[0];
-  if (!file) return;
-
-  // Update the form data with the file
-  form.photo = file;
-
-  // Create preview
-  if (previewUrl.value) URL.revokeObjectURL(previewUrl.value);
-  previewUrl.value = URL.createObjectURL(file);
-}
-
 
 function onPhotoChange(e) {
   const file = e.target.files?.[0];
@@ -71,36 +59,10 @@ function onPhotoChange(e) {
   previewUrl.value = URL.createObjectURL(file);
 }
 
-const submitNEW = () => {
-  // Use transform to ensure proper FormData handling
-  form.transform((data) => ({
-    ...data,
-    // If you need to keep the existing photo when no new file is selected
-    photo: data.photo || props.client.photo,
-  })).put(route('client.update', props.client.id), {
-    forceFormData: true,
-    preserveScroll: true,
-    onError: (errors) => {
-      console.error('Form errors:', errors);
-      toast.error('Validation error. Please check the fields.');
-    },
-    onSuccess: () => {
-      toast.success('Client updated successfully');
-      // cleanup preview if any
-      if (previewUrl.value) {
-        URL.revokeObjectURL(previewUrl.value);
-        previewUrl.value = null;
-      }
-      // Switch back to show tab
-      activeTab.value = 'show';
-    }
-  });
-};
-
 const submit = () => {
   // Use forceFormData so file uploads work
-  form.put(route('client.update', props.client.id), {
-    //forceFormData: true,
+  form.post(route('client.update', props.client.id), {
+    forceFormData: true,
     onError: () => {
       toast.error('Validation error. Please check the fields.');
     },
@@ -251,7 +213,7 @@ const deleteClient = () => {
 
               <div v-if="previewUrl || props.client.photo" class="mt-2">
                 <img
-                  :src="previewUrl ? previewUrl : `/storage/${props.client.photo}`"
+                  :src="previewUrl ? previewUrl : props.client.client_photo"
                   alt="Preview"
                   class="h-24 w-24 rounded object-cover ring-1 ring-gray-200 dark:ring-gray-700"
                 />

@@ -37,9 +37,12 @@ function onPhotoChange(e) {
 }
 
 const submit = () => {
-  form.put(route('product.update', props.product.id), {
-    //forceFormData: true,
+  form.post(route('product.update', props.product.id), {
+    forceFormData: true,
     preserveScroll: true,
+    data: {
+      _method: 'PUT', // 👈 Laravel will now treat this as PUT
+    },
     onError: () => {
       toast.error('Validation error. Please check the fields.');
     },
@@ -51,8 +54,10 @@ const submit = () => {
       }
       activeTab.value = 'show';
     }
+
   });
 };
+
 
 const deleteProduct = () => {
   if (!confirm('Are you sure you want to delete this product?')) return;
