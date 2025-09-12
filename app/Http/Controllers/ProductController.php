@@ -86,7 +86,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        dd($product->toArray());
+        //dd($product->toArray());
         return inertia('Auth/Products/Show',[
             'product' => $product,
         ]);
