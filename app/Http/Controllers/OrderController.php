@@ -74,7 +74,6 @@ class OrderController extends Controller
         ]);
     }
 
-
     public function store(Request $request)
     {
         //dd($request->toArray());
@@ -184,6 +183,8 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
+
+
         $validated = $request->validate([
             'status' => 'required|in:pending,processing,completed,cancelled,rejected',
         ]);

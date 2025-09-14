@@ -75,7 +75,7 @@ const submitPayment = () => {
   form.post(route('order.update.payment', props.order.id), {
     preserveScroll: true,
     onSuccess: () => {
-      toast.success('Payment recorded successfully!');
+      //toast.success('Payment recorded successfully!');
       form.reset('payment_amount');
       form.payment_method = 'cash';
     },
@@ -98,8 +98,8 @@ const completeOrder = () => {
 
   completeForm.put(route('order.update.status', props.order.id), {
     preserveScroll: true,
-    onSuccess: () => {
-      toast.success('Order marked as completed!');
+    onSuccess: (response) => {
+      //toast.success('Order marked as completed!');
     },
     onError: () => {
       toast.error('Error completing order');

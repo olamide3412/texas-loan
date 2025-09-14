@@ -42,12 +42,12 @@ const liClasses = 'block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gra
                 </Link>
             </li>
              <li>
-                <Link :href="route('users.index')" :class="liClasses">
-                    Users
+                <Link :href="route('reports.payments')" :class="liClasses">
+                    Report
                 </Link>
             </li>
             <li>
-                <Link :href="route('users.profile')" :class="liClasses">
+                <Link :href="route('staff.profile')" :class="liClasses">
                     Profile
                 </Link>
             </li>

@@ -40,6 +40,8 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth.user' => fn () => Auth::check() ? Auth::user() : null,
              'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
                 'message' => fn () => $request->session()->get('message')
             ],
             'support' => [

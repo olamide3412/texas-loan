@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Storage;
 
 class Staff extends Model
 {
-    protected $appends = ['full_name','full_address','client_photo'];
+    protected $appends = ['full_name','full_address','staff_photo'];
+
 
      public function getFullNameAttribute(){
         $firstName = $this->first_name ? ucfirst($this->first_name) : '';
@@ -28,7 +29,7 @@ class Staff extends Model
         return !empty($fullAddress) ? $fullAddress : 'No address Provided';
     }
 
-    public function getClientPhotoAttribute(){
+    public function getStaffPhotoAttribute(){
         $photo = $this->attributes['photo'] ?? '';
         if (!empty($photo) && Storage::exists($photo)) {
             return Storage::temporaryUrl($this->attributes['photo'], now()->addMinutes(5));
@@ -39,4 +40,11 @@ class Staff extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+
+    // protected $casts = [
+    //     'date_of_birth' => 'date',
+    //     'date_of_appointment' => 'date',
+    //     'monthly_salary' => 'decimal:2',
+    // ];
 }

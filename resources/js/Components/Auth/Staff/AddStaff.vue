@@ -9,7 +9,7 @@ const toast = useToast()
 const emit = defineEmits(['change-active-tab'])
 
 const genderEnums = usePage().props.enums.genders;
-const occupationEnums = usePage().props.enums.occupations;
+const roleEnums = usePage().props.enums.roles;
 const stateEnums = usePage().props.enums.states;
 
 const previewUrl = ref(null)
@@ -17,7 +17,8 @@ const activeSection = ref(1) // Track active section for step navigation
 const sections = [
   { id: 1, title: "Personal Info", icon: "👤" },
   { id: 2, title: "Contact & Address", icon: "🏠" },
-  { id: 3, title: "ID & Photo", icon: "📷" }
+  { id: 3, title: "Employment Details", icon: "💼" },
+  { id: 4, title: "Account Details", icon: "🔐" }
 ]
 
 const form = useForm({
@@ -25,6 +26,7 @@ const form = useForm({
   last_name: '',
   first_name: '',
   other_name: '',
+  staff_number: '',
   // contact
   email: '',
   phone_number: '',
@@ -35,12 +37,17 @@ const form = useForm({
   residential_address: '',
   local_government: '',
   state: '',
-  occupation: '',
-  // IDs
+  // employment
+  monthly_salary: '',
   nin: '',
   bvn: '',
-  // finance
-  annual_income: '',
+  bank_account: '',
+  bank_name: '',
+  date_of_appointment: '',
+  position: '',
+  department: '',
+  // account
+  role: '',
   // file
   photo: null,
 })
@@ -57,12 +64,16 @@ function onPhotoChange(e) {
 // Navigation functions
 const nextSection = () => {
   // Basic validation before proceeding
-  if (activeSection.value === 1 && (!form.first_name || !form.last_name || !form.date_of_birth || !form.gender)) {
+  if (activeSection.value === 1 && (!form.first_name || !form.last_name || !form.gender)) {
     toast.error('Please fill in all required personal information')
     return
   }
-  if (activeSection.value === 2 && (!form.phone_number || !form.residential_address || !form.local_government || !form.state || !form.occupation)) {
-    toast.error('Please fill in all required contact and address information')
+  if (activeSection.value === 2 && (!form.email || !form.phone_number)) {
+    toast.error('Please fill in all required contact information')
+    return
+  }
+  if (activeSection.value === 3 && (!form.position || !form.department)) {
+    toast.error('Please fill in all required employment information')
     return
   }
   if (activeSection.value < sections.length) {
@@ -78,18 +89,18 @@ const prevSection = () => {
 
 const submit = () => {
   // Final validation
-  if (!form.nin || !form.bvn || !form.annual_income) {
-    toast.error('Please complete all required identification fields')
+  if (!form.role) {
+    toast.error('Please select a role for the staff member')
     return
   }
 
-  form.post(route('client.store'), {
+  form.post(route('staff.store'), {
     forceFormData: true,
     onError: () => {
       toast.error('Validation error. Please check the highlighted fields.')
     },
     onSuccess: () => {
-      //toast.success('Client registered successfully!')
+      toast.success('Staff member registered successfully!')
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null
       form.reset()
@@ -102,7 +113,7 @@ const submit = () => {
 
 <template>
   <div class="container-xl lg:container m-auto p-0">
-    <h1 class="title dark:text-white mb-6">Register Client</h1>
+    <h1 class="title dark:text-white mb-6">Register Staff</h1>
 
     <!-- Progress Indicator -->
     <div class="mb-6">
@@ -145,7 +156,7 @@ const submit = () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
           <TextInput
             name="last_name"
-            label="Last Name *"
+            label="Last Name"
             v-model="form.last_name"
             :message="form.errors.last_name"
             :required="true"
@@ -153,7 +164,7 @@ const submit = () => {
           />
           <TextInput
             name="first_name"
-            label="First Name *"
+            label="First Name"
             v-model="form.first_name"
             :message="form.errors.first_name"
             :required="true"
@@ -167,20 +178,26 @@ const submit = () => {
             placeholder="Single word only"
           />
           <TextInput
-            name="date_of_birth"
-            label="Date of Birth *"
-            type="date"
-            v-model="form.date_of_birth"
-            :message="form.errors.date_of_birth"
-            :required="true"
+            name="staff_number"
+            label="Staff Number (optional)"
+            v-model="form.staff_number"
+            :message="form.errors.staff_number"
+            placeholder="e.g. STF001"
           />
           <SelectInput
             name="gender"
-            label="Gender *"
+            label="Gender"
             v-model="form.gender"
             :options="genderEnums"
             :message="form.errors.gender"
             :required="true"
+          />
+          <TextInput
+            name="date_of_birth"
+            label="Date of Birth (optional)"
+            type="date"
+            v-model="form.date_of_birth"
+            :message="form.errors.date_of_birth"
           />
         </div>
       </div>
@@ -194,15 +211,16 @@ const submit = () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
           <TextInput
             name="email"
-            label="Email (optional)"
+            label="Email"
             type="email"
             v-model="form.email"
             :message="form.errors.email"
             placeholder="name@example.com"
+            :required="true"
           />
           <TextInput
             name="phone_number"
-            label="Phone Number *"
+            label="Phone Number"
             type="tel"
             inputmode="numeric"
             v-model="form.phone_number"
@@ -212,71 +230,111 @@ const submit = () => {
           />
           <TextInput
             name="residential_address"
-            label="Residential Address *"
+            label="Residential Address (optional)"
             v-model="form.residential_address"
             :message="form.errors.residential_address"
-            :required="true"
             class="md:col-span-2"
           />
           <TextInput
             name="local_government"
-            label="Local Government *"
+            label="Local Government (optional)"
             v-model="form.local_government"
             :message="form.errors.local_government"
-            :required="true"
           />
           <SelectInput
             name="state"
-            label="State *"
+            label="State (optional)"
             v-model="form.state"
             :options="stateEnums"
             :message="form.errors.state"
-            :required="true"
-          />
-          <SelectInput
-            name="occupation"
-            label="Occupation *"
-            v-model="form.occupation"
-            :options="occupationEnums"
-            :message="form.errors.occupation"
-            :required="true"
           />
         </div>
       </div>
 
-      <!-- Section 3: Identification & Photo -->
+      <!-- Section 3: Employment Details -->
       <div v-if="activeSection === 3" class="mb-6">
         <h2 class="text-md font-semibold mb-3 flex items-center">
-          <span class="mr-2">📷</span> Identification & Photo
+          <span class="mr-2">💼</span> Employment Details
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
           <TextInput
-            name="nin"
-            label="NIN *"
-            v-model="form.nin"
-            inputmode="numeric"
-            :message="form.errors.nin"
+            name="position"
+            label="Position"
+            v-model="form.position"
+            :message="form.errors.position"
             :required="true"
+            placeholder="e.g. Accountant"
+          />
+          <TextInput
+            name="department"
+            label="Department"
+            v-model="form.department"
+            :message="form.errors.department"
+            :required="true"
+            placeholder="e.g. Finance"
+          />
+          <TextInput
+            name="date_of_appointment"
+            label="Date of Appointment (optional)"
+            type="date"
+            v-model="form.date_of_appointment"
+            :message="form.errors.date_of_appointment"
+          />
+          <TextInput
+            name="monthly_salary"
+            label="Monthly Salary (optional)"
+            type="number"
+            step="0.01"
+            v-model="form.monthly_salary"
+            :message="form.errors.monthly_salary"
+            placeholder="e.g. 50000"
+          />
+          <TextInput
+            name="nin"
+            label="NIN (optional)"
+            v-model="form.nin"
+            :message="form.errors.nin"
             placeholder="11 digits"
           />
           <TextInput
             name="bvn"
-            label="BVN *"
+            label="BVN (optional)"
             v-model="form.bvn"
-            inputmode="numeric"
             :message="form.errors.bvn"
-            :required="true"
             placeholder="11 digits"
           />
           <TextInput
-            name="annual_income"
-            label="Annual Income *"
-            v-model="form.annual_income"
-            inputmode="numeric"
-            :message="form.errors.annual_income"
+            name="bank_account"
+            label="Bank Account (optional)"
+            v-model="form.bank_account"
+            :message="form.errors.bank_account"
+            placeholder="Account number"
+          />
+          <TextInput
+            name="bank_name"
+            label="Bank Name (optional)"
+            v-model="form.bank_name"
+            :message="form.errors.bank_name"
+            placeholder="Bank name"
+          />
+        </div>
+      </div>
+
+      <!-- Section 4: Account Details & Photo -->
+      <div v-if="activeSection === 4" class="mb-6">
+        <h2 class="text-md font-semibold mb-3 flex items-center">
+          <span class="mr-2">🔐</span> Account Details & Photo
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
+          <SelectInput
+            name="role"
+            label="Role"
+            v-model="form.role"
+            :options="roleEnums"
+            :message="form.errors.role"
             :required="true"
-            placeholder="e.g. 1200000"
             class="md:col-span-2"
           />
 
@@ -299,6 +357,9 @@ const submit = () => {
             </div>
           </div>
         </div>
+        <h3 class="text-md mb-3 flex items-center">
+          <span class="mr-2">Default Staff Password:</span> Texas@123
+        </h3>
       </div>
 
       <!-- Navigation Buttons -->
@@ -329,13 +390,9 @@ const submit = () => {
           type="submit"
         >
           <span v-if="form.processing">Registering...</span>
-          <span v-else>Register Client</span>
+          <span v-else>Register Staff</span>
         </button>
       </div>
-
-      <p class="text-xs text-gray-500 mt-3">
-        Note: First/Last/Other Name must be a single word (no spaces). You may type commas in Annual Income—server will normalize it.
-      </p>
     </form>
   </div>
 </template>

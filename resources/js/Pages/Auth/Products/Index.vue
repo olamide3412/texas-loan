@@ -14,7 +14,7 @@ const handleChaneActiveTab = (tabName = 'listings') => {
 </script>
 <template>
   <Head :title=" ` | ${$page.component}` "/>
-  <div class="container-xl lg:container m-auto  p-10">
+  <div class="container-xl lg:container m-auto  p-5">
     <!-- Tab Buttons -->
     <div class="flex space-x-2 mb-4">
       <button
@@ -42,7 +42,7 @@ const handleChaneActiveTab = (tabName = 'listings') => {
     </div>
 
     <!-- Tab Content -->
-    <div class="p-4  rounded-lg shadow-inner">
+    <div class="p-1  rounded-lg shadow-inner">
       <ProductListings v-if="activeTab === 'listings'" :products="products"/>
       <AddProduct v-if="activeTab === 'add'"  @change-active-tab="handleChaneActiveTab"/>
     </div>

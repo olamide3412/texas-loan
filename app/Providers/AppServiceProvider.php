@@ -6,6 +6,7 @@ use App\Enums\GenderEnums;
 use App\Enums\OccupationEnums;
 use App\Enums\RoleEnums;
 use App\Enums\StatesEnums;
+use App\Enums\StatusEnums;
 use App\Helpers\EnumHelper;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
                 'genders' => GenderEnums::class,
                 'states' => StatesEnums::class,
                 'occupations' => OccupationEnums::class,
+                'statuses'  => StatusEnums::class,
                 // Add more enums here as needed
             ])
         ]);

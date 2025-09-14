@@ -11,6 +11,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { createPinia } from 'pinia';
 import { useThemeStore } from './Stores/themeStore';
+import FlashMessages from './Components/FlashMessages.vue';
 
 
 AOS.init({
@@ -23,7 +24,7 @@ AOS.init({
 const pinia = createPinia();
 
 createInertiaApp({
-    title: (title) => `IME ${title}`,
+    title: (title) => `TEXAS ${title}`,
     resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
         let page =  pages[`./Pages/${name}.vue`];
@@ -43,7 +44,8 @@ createInertiaApp({
         app.config.globalProperties.$formatDate = formatDate;
 
         app.component('Head', Head)
-        .component('Link', Link);
+            .component('Link', Link)
+            .component('FlashMessages', FlashMessages);
 
         // ✅ Dynamically import FontAwesome to split the chunk
         import('./fontawesome').then(({ FontAwesomeIcon }) => {

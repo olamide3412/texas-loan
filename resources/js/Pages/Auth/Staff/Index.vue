@@ -1,21 +1,20 @@
 <script setup>
-import AddExchnageRate from '@/Components/Auth/ExchangeRates/Add.vue';
-import ExchnageRateListings from '@/Components/Auth/ExchangeRates/Listings.vue';
+import AddStaff from '@/Components/Auth/Staff/AddStaff.vue';
+import StaffListings from '@/Components/Auth/Staff/StaffListings.vue';
 import { ref } from 'vue';
 
 const props = defineProps({
-    exchangeRates: Object
+    staff: Object
 })
 
 const activeTab = ref('listings');
-const handleChaneActiveTab = (tabName = 'listings') => {
+const handleChangeActiveTab = (tabName = 'listings') => {
     activeTab.value = tabName;
 }
 </script>
-
 <template>
-      <Head :title=" ` | ${$page.component}` "/>
-  <div class="container-xl lg:container m-auto   p-10">
+  <Head :title=" ` | ${$page.component}` "/>
+  <div class="container-xl lg:container m-auto  p-5">
     <!-- Tab Buttons -->
     <div class="flex space-x-2 mb-4">
       <button
@@ -27,7 +26,7 @@ const handleChaneActiveTab = (tabName = 'listings') => {
         ]"
         @click="activeTab = 'listings'"
       >
-        Exchange Rates
+        Staff
       </button>
       <button
         :class="[
@@ -38,14 +37,14 @@ const handleChaneActiveTab = (tabName = 'listings') => {
         ]"
         @click="activeTab = 'add'"
       >
-        Add Exchange Rate
+        Add Staff
       </button>
     </div>
 
     <!-- Tab Content -->
-    <div class="p-4 rounded-lg shadow-inner">
-      <ExchnageRateListings v-if="activeTab === 'listings'" :exchangeRates="exchangeRates"/>
-      <AddExchnageRate v-if="activeTab === 'add'"  @change-active-tab="handleChaneActiveTab"/>
+    <div class="p-1  rounded-lg shadow-inner">
+      <StaffListings v-if="activeTab === 'listings'" :staff="staff"/>
+      <AddStaff v-if="activeTab === 'add'"  @change-active-tab="handleChangeActiveTab"/>
     </div>
   </div>
 </template>

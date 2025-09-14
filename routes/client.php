@@ -3,7 +3,7 @@
 use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','admin'])->group(function () {
     // Clients
     Route::post('/client-store', [ClientController::class, 'store'])->name('client.store');
     Route::get('/clients', [ClientController::class, 'index'])->name('client.index');

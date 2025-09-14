@@ -37,7 +37,7 @@ class SuperAdminMiddleware
             return $next($request);
         }
 
-        return redirect()->route('dashboard.users')->with('error', 'You do not have admin access');
+        return redirect()->route('dashboard')->with('error', 'You do not have admin access');
 
     }
 }

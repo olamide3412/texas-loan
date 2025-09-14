@@ -157,4 +157,16 @@ class ProductController extends Controller
             throw $e;
         }
     }
+
+    public function productPublicIndex(Request $request)
+    {
+       $products = Product::where('is_available', true)
+        ->orderBy('created_at', 'desc')
+        ->take(25)
+        ->get();
+
+        return inertia('Products', [
+            'products' => $products
+        ]);
+    }
 }

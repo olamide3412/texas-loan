@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OrderStatusEnums;
 use App\Enums\PaymentMethodEnums;
 use App\Enums\PaymentStatusEnums;
 use App\Models\Order;
@@ -40,6 +41,8 @@ class PaymentController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY'),
                 'Content-Type' => 'application/json',
+                'User-Agent' => 'TexasLoan/1.0 (Laravel; PHP ' . phpversion() . ')',
+                'Accept' => 'application/json',
             ])->post('https://api.flutterwave.com/v3/payments', [
                 'tx_ref' => $tx_ref,
                 'amount' => $order->total_price, // Use the total order amount
@@ -52,7 +55,8 @@ class PaymentController extends Controller
                 ],
                 'customizations' => [
                     'title' => env('APP_NAME') . ' Order Payment',
-                    'description' => 'Payment for Order #' . $order->order_ref
+                    'description' => 'Payment for Order #' . $order->order_ref,
+                    //'logo' => core()->getConfigData('general.design.admin_logo.logo_image'),
                 ]
             ]);
 
@@ -176,13 +180,14 @@ class PaymentController extends Controller
                     'payment_status' => PaymentStatusEnums::Success->value,
                     'payment_date' => now(),
                     'flw_ref' => $responseData['data']['flw_ref'],
+                    'collected_by' => Auth::id()
                 ]);
 
                 // Update order - mark as fully paid and completed
                 $order->update([
                     'amount_paid' => $order->total_price,
                     'remaining_balance' => 0,
-                    'status' => 'completed',
+                    'status' => OrderStatusEnums::Paid->value,
                     'given_by' => Auth::id() ?? $order->given_by,
                 ]);
 

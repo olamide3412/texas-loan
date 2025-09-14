@@ -60,6 +60,6 @@ class AdminMiddleware
             return response()->json(['error' => $message], 403);
         }
 
-        return redirect()->route('dashboard.users')->with('error', $message);
+        return redirect()->route('dashboard')->with('error', $message);
     }
 }

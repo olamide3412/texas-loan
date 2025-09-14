@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','super_admin'])->group(function () {
     // Products
     Route::get('/products/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/products', [ProductController::class, 'store'])->name('product.store');

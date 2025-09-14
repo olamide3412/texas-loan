@@ -41,7 +41,7 @@ const productImage = computed(() => {
       <div class="flex items-center space-x-4">
         <!-- Product Image -->
         <img
-          :src="productImage"
+          :src="product.product_photo"
           alt="Product Image"
           class="w-16 h-16 object-cover rounded-lg border"
         />
@@ -65,10 +65,6 @@ const productImage = computed(() => {
     <div class="mt-4 flex justify-end space-x-2">
       <Link :href="route('product.show', product.id)" class="rounded-element">
         <font-awesome-icon :icon="['fas', 'eye']" /> Show
-      </Link>
-
-      <Link :href="route('product.show', product.id)" class="rounded-element">
-        <font-awesome-icon :icon="['fas', 'edit']" /> Edit
       </Link>
     </div>
   </div>

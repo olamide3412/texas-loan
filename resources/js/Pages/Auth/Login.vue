@@ -9,7 +9,7 @@ import { useToast } from 'vue-toastification';
 const toast = useToast();
 const flashMsg = usePage().props.flash.message;
 const form = useForm({
-  email: null,
+  login: null,
   password: null,
   remember: false,
 });
@@ -19,7 +19,7 @@ const handleLogin = () => {
   form.post(route('login'),{
         onError: () => {
             form.reset("password");
-            toast.error(form.errors.email ?? 'Something went wrong try again');
+            toast.error(form.errors.login ?? 'Something went wrong try again');
         },
         onSuccess: () => {
             toast.success('Login succesfull!!!');
@@ -56,11 +56,13 @@ const handleLogin = () => {
         <!-- Form -->
         <form @submit.prevent="handleLogin" class="mt-6 space-y-6">
           <!-- Email -->
-          <TextInput name="email" label="Email" v-model="form.email"
-            placeholder="you@example.com" :message="form.errors.email"/>
+          <TextInput name="login" label="Email or Phone Number" v-model="form.login"
+            type="text" placeholder="you@texas.ng" :message="form.errors.login"
+            autofocus autocomplete="username" :required="true"/>
            <!-- Password -->
           <TextInput name="password" label="Password" type="password"
-            v-model="form.password" placeholder="••••••••"/>
+            v-model="form.password" placeholder="••••••••"
+            :required="true" autocomplete="current-password"/>
 
           <!-- Remember Me & Forgot Password -->
           <div class="flex items-center justify-between">

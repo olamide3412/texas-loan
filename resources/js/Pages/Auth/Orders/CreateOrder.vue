@@ -217,7 +217,7 @@ const submit = () => {
       cart.value = []; // Clear cart after successful order
       guarantors.value = []; // Clear guarantors
       activeStep.value = 1; // Reset to first step
-      toast.success('Order created successfully!!!.');
+      //toast.success('Order created successfully!!!.');
     },
     onError: () => {
       toast.error('Validation error. Please check the highlighted fields.');
