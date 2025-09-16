@@ -132,7 +132,7 @@ class OrderController extends Controller
                 'repayment_frequency'=> $request->repayment_frequency ?? 'monthly',
                 'repayment_term'     => $request->repayment_term ?? 1,
                 'status'             => OrderStatusEnums::Pending->value,
-                'created_by'         => Auth::id(), // works for staff guard
+                'created_by'         => Auth::guard('client')->check() ? null : Auth::id(), // works for staff guard
             ]);
 
             // Attach products
