@@ -22,7 +22,7 @@ const liClasses = 'block px-4 py-2 text-gray-700 hover:bg-gray-100 dark:text-gra
             </li>
             <li>
                 <Link :href="route('product.index')" :class="liClasses">
-                    Products
+                   Manage Products
                 </Link>
             </li>
             <li>

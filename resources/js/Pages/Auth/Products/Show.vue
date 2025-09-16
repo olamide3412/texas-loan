@@ -47,7 +47,7 @@ const submit = () => {
       toast.error('Validation error. Please check the fields.');
     },
     onSuccess: () => {
-      toast.success('Product updated successfully');
+      //toast.success('Product updated successfully');
       if (previewUrl.value) {
         URL.revokeObjectURL(previewUrl.value);
         previewUrl.value = null;
@@ -67,7 +67,7 @@ const deleteProduct = () => {
       toast.error('Error deleting product');
     },
     onSuccess: () => {
-      toast.success('Product deleted successfully');
+      //toast.success('Product deleted successfully');
     }
   });
 };

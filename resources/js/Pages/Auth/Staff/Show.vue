@@ -71,7 +71,7 @@ const submit = () => {
       toast.error('Validation error. Please check the fields.');
     },
     onSuccess: () => {
-      toast.success('Staff updated successfully');
+      //toast.success('Staff updated successfully');
       if (previewUrl.value) {
         URL.revokeObjectURL(previewUrl.value);
         previewUrl.value = null;
@@ -88,7 +88,7 @@ const deleteStaff = () => {
       toast.error('Error deleting staff member');
     },
     onSuccess: () => {
-      toast.success('Staff member deleted successfully');
+      //toast.success('Staff member deleted successfully');
     }
   });
 };
@@ -105,10 +105,11 @@ const resetPassword = (route_name) => {
             toast.error('Validation error');
         },
         onSuccess: () => {
-            toast.success('User password updated succesfully');
+            //toast.success('User password updated succesfully');
         }
     });
 }
+
 
 </script>
 
@@ -128,7 +129,7 @@ const resetPassword = (route_name) => {
             />
             <img
               v-else-if="props.staff.photo"
-              :src="props.staff.photo_url"
+              :src="props.staff.staff_photo"
               alt="Photo"
               class="w-full h-full object-cover"
             />
@@ -137,7 +138,7 @@ const resetPassword = (route_name) => {
 
           <div>
             <div class="flex items-center space-x-3">
-              <h1 class="text-2xl font-semibold">{{ props.staff.first_name }} {{ props.staff.last_name }}</h1>
+              <h1 class="text-2xl font-semibold">{{ props.staff.full_name }}</h1>
               <span
                 class="rounded-xl p-1 text-xs w-fit"
                 :class="isEnable ? 'bg-green-200 dark:bg-green-500' : 'bg-red-200 dark:bg-red-500'"
@@ -278,7 +279,7 @@ const resetPassword = (route_name) => {
 
               <div v-if="previewUrl || props.staff.photo" class="mt-2">
                 <img
-                  :src="previewUrl ? previewUrl : props.staff.photo_url"
+                  :src="previewUrl ? previewUrl : props.staff.staff_photo"
                   alt="Preview"
                   class="h-24 w-24 rounded object-cover ring-1 ring-gray-200 dark:ring-gray-700"
                 />

@@ -67,7 +67,7 @@ const submit = () => {
       toast.error('Validation error. Please check the fields.');
     },
     onSuccess: () => {
-      toast.success('Client updated successfully');
+      //toast.success('Client updated successfully');
       // cleanup preview if any
       if (previewUrl.value) {
         URL.revokeObjectURL(previewUrl.value);
@@ -85,7 +85,7 @@ const deleteClient = () => {
       toast.error('Error deleting client');
     },
     onSuccess: () => {
-      toast.success('Client deleted successfully');
+      //toast.success('Client deleted successfully');
     }
   });
 };

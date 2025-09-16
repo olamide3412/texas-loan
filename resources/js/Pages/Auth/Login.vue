@@ -1,6 +1,6 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Logo from '../../../images/logo.png'
 import Footer from '@/Components/Footer.vue';
 import TextInput from '@/Components/Forms/TextInput.vue';
@@ -12,14 +12,96 @@ const form = useForm({
   login: null,
   password: null,
   remember: false,
+  cf_turnstile_response: '',
+});
+
+const turnstileWidgetId = ref(null);
+const isTurnstileLoaded = ref(false);
+const turnstileError = ref('');
+
+// Load Cloudflare Turnstile script
+const loadTurnstile = () => {
+    if (window.turnstile) {
+        renderTurnstile();
+        return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.defer = true;
+
+    script.onload = () => {
+        isTurnstileLoaded.value = true;
+        renderTurnstile();
+    };
+
+    script.onerror = () => {
+        turnstileError.value = 'Failed to load CAPTCHA. Please refresh the page.';
+    };
+
+    document.head.appendChild(script);
+};
+// Render Turnstile widget
+const renderTurnstile = () => {
+    if (window.turnstile && document.getElementById('cf-turnstile-widget')) {
+        turnstileWidgetId.value = window.turnstile.render('#cf-turnstile-widget', {
+            sitekey: usePage().props.turnstileSiteKey,
+            callback: (token) => {
+                form.cf_turnstile_response = token;
+                turnstileError.value = '';
+            },
+            'expired-callback': () => {
+                form.cf_turnstile_response = '';
+                turnstileError.value = 'CAPTCHA expired. Please verify again.';
+                resetTurnstile();
+            },
+            'error-callback': () => {
+                form.cf_turnstile_response = '';
+                turnstileError.value = 'CAPTCHA error. Please try again.';
+                resetTurnstile();
+            }
+        });
+    }
+};
+// Reset Turnstile widget
+const resetTurnstile = () => {
+    if (window.turnstile && turnstileWidgetId.value) {
+        window.turnstile.reset(turnstileWidgetId.value);
+    }
+};
+// Reload Turnstile
+const reloadTurnstile = () => {
+    resetTurnstile();
+    form.cf_turnstile_response = '';
+    turnstileError.value = '';
+};
+// Load Turnstile when component mounts
+onMounted(() => {
+    loadTurnstile();
 });
 
 const handleLogin = () => {
+    if (!form.cf_turnstile_response) {
+        turnstileError.value = 'Please complete the CAPTCHA verification';
+        return;
+    }
   // Handle login logic here
   form.post(route('login'),{
+        onFinish: () => {
+            form.reset('password');
+            // Reset Turnstile after submission
+            resetTurnstile();
+        },
         onError: () => {
             form.reset("password");
             toast.error(form.errors.login ?? 'Something went wrong try again');
+
+             // Reset Turnstile on error
+            if (errors.cf_turnstile_response) {
+                resetTurnstile();
+                form.cf_turnstile_response = '';
+            }
         },
         onSuccess: () => {
             toast.success('Login succesfull!!!');
@@ -64,6 +146,22 @@ const handleLogin = () => {
             v-model="form.password" placeholder="••••••••"
             :required="true" autocomplete="current-password"/>
 
+                 <!-- Cloudflare Turnstile Widget -->
+                <div class="flex justify-left">
+                    <div id="cf-turnstile-widget" class="cf-turnstile"></div>
+                </div>
+                <div v-if="turnstileError" class="text-red-600 text-sm text-center">
+                    {{ turnstileError }}
+                </div>
+                <div v-if="form.errors.cf_turnstile_response" class="text-red-600 text-sm text-center">
+                    {{ form.errors.cf_turnstile_response }}
+                </div>
+                <div class=" hidden text-center">
+                    <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500" @click.prevent="reloadTurnstile">
+                        Reload CAPTCHA
+                    </a>
+                </div>
+
           <!-- Remember Me & Forgot Password -->
           <div class="flex items-center justify-between">
             <label class="flex items-center">
@@ -74,7 +172,7 @@ const handleLogin = () => {
               />
               <span class="ml-2 text-sm text-gray-600 dark:text-gray-200">Remember me</span>
             </label>
-            <a href="#" class="hidden text-sm text-primary hover:text-primary-dark">Forgot password?</a>
+            <a href="#" class=" text-sm text-primary dark:text-secondary-300 hover:text-primary-dark">Forgot password?</a>
           </div>
 
           <!-- Submit Button -->
@@ -124,9 +222,10 @@ const handleLogin = () => {
         </div>
 
         <!-- Register Link -->
-        <p class=" hidden text-center text-sm text-gray-600 mt-4">
+        <p class=" text-center text-sm text-gray-600 dark:text-gray-200 mt-4">
           Don't have an account?
-          <a href="/register" class="font-medium text-primary hover:text-primary-dark">Sign up</a>
+          <Link :href="route('client.register')" class="font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign up</Link>
+          <a href="/register" class=" hidden font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign up</a>
         </p>
       </div>
     </div>

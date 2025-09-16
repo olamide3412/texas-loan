@@ -10,7 +10,7 @@ class Staff extends Model
     protected $appends = ['full_name','full_address','staff_photo'];
 
 
-     public function getFullNameAttribute(){
+    public function getFullNameAttribute(){
         $firstName = $this->first_name ? ucfirst($this->first_name) : '';
         $lastName = $this->last_name ? ucfirst($this->last_name) : '';
         $otherName = $this->other_name ? ucfirst($this->other_name) : '';

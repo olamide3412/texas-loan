@@ -3,7 +3,7 @@ import Logo from '../../images/farm-logo.png' // Replace with Maibere Ventures l
 </script>
 
 <template>
-  <section class="relative bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+  <section class="relative pb-16 bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
     <!-- Optional Background Overlay -->
     <div class="absolute inset-0 bg-black opacity-5 pointer-events-none"></div>
 

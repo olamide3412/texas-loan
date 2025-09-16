@@ -10,14 +10,18 @@ use App\Models\Product;
 use App\Models\Client;
 use App\Models\EmploymentDetail;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class OrderController extends Controller
 {
+
+    use AuthorizesRequests;
 
     public function index(Request $request)
     {
@@ -66,6 +70,18 @@ class OrderController extends Controller
 
     public function create(Client $client)
     {
+
+         $this->authorize('createOrder', $client);
+
+        // if (!Auth::guard('client')->check() && !Auth::check()) {
+        //     abort(403);
+        // }
+
+        //    // Ensure logged-in client is accessing their own record
+        // if (Auth::guard('client')->check() && Auth::guard('client')->id() !== $client->id) {
+        //     abort(403, 'You are not authorized to access this client.');
+        // }
+
         //dd($client->toArray());
         $products = Product::where('is_available', true)->get();
         return Inertia::render('Auth/Orders/CreateOrder', [
@@ -76,6 +92,8 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+
+
         //dd($request->toArray());
         $request->validate([
             'client_id' => 'required|exists:clients,id',
@@ -88,6 +106,9 @@ class OrderController extends Controller
             'employment' => 'nullable|array',
             'employment.guarantors' => 'nullable|json',
         ]);
+
+        // $client = Client::findOrFail($request->client_id);
+        // $this->authorize('createOrder', $client);
 
         //dd('Validated');
 
@@ -149,7 +170,7 @@ class OrderController extends Controller
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Order created successfully!!!');
+            return redirect()->route('order.show', $order)->with('success', 'Order created successfully!!!');
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -162,6 +183,15 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+
+        //$this->authorize('createOrder', $client);
+
+        $authUser = Auth::guard('client')->user() ?? Auth::user();
+
+        if (! Gate::forUser($authUser)->allows('view', $order)) {
+            abort(403);
+        }
+
         $order->load('items.product', 'employmentDetail', 'client');
 
         return inertia('Auth/Orders/Show', [

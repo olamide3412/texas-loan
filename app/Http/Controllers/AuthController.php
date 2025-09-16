@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\StatusEnums;
 use App\Models\Staff;
 use App\Models\User;
+use App\Rules\Turnstile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -13,26 +14,104 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    public function register(Request $request){
-        //sleep(1);
-        //dd($request);
-        $validatedData = $request->validate([
-            'name' => ['required','max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required','confirmed']
+
+    public function login(Request $request)
+    {
+        $attributes = $request->validate([
+            'login' => ['required', 'string'],
+            'password' => ['required'],
+            'cf_turnstile_response' => ['required', new Turnstile()],
         ]);
 
+        $login = $attributes['login'];
+        $key = 'login:' . Str::lower($login) . '|' . $request->ip();
 
-        //dd('pass');
-        $user = User::create($validatedData);
+        // Check if the user has too many failed attempts
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+            $time = $this->formatLockoutTime($seconds);
 
-        //Auth::login($user);
+            throw ValidationException::withMessages([
+                'login' => "Too many login attempts. Please try again in {$time}.",
+            ]);
+        }
 
-        return redirect()->route('dashboard')->with('message', 'Welcome to Laravel Inertia Vue app');
+        // Determine if the login is an email or phone number
+        $isEmail = filter_var($login, FILTER_VALIDATE_EMAIL);
+
+        // Try to authenticate as staff first
+        if ($this->attemptStaffLogin($login, $attributes['password'], $isEmail)) {
+            RateLimiter::clear($key);
+            $request->session()->regenerate();
+            return redirect()->intended(route('dashboard'));
+        }
+
+        // Try to authenticate as client
+        if ($this->attemptClientLogin($login, $attributes['password'], $isEmail)) {
+            RateLimiter::clear($key);
+            $request->session()->regenerate();
+            return redirect()->intended(route('client.dashboard'));
+        }
+
+        // Both failed
+        RateLimiter::hit($key, 7200);
+        log_new("Failed login attempt with: $login IP: " . $request->ip());
+
+        throw ValidationException::withMessages([
+            'login' => 'Invalid Credentials',
+        ]);
+    }
+
+    private function attemptStaffLogin($login, $password, $isEmail)
+    {
+        if ($isEmail) {
+            $credentials = ['email' => $login, 'password' => $password];
+        } else {
+            $staff = Staff::where('phone_number', $login)->first();
+            if (!$staff || !$staff->user) return false;
+            $credentials = ['email' => $staff->user->email, 'password' => $password];
+        }
+
+        if (Auth::guard('web')->attempt($credentials)) {
+            $user = Auth::guard('web')->user();
+
+            if ($user->status === StatusEnums::Disable->value) {
+                Auth::guard('web')->logout();
+                return false;
+            }
+
+            log_new("Login successful staff: " . $user->email);
+            return true;
+        }
+
+        return false;
+    }
+
+    private function attemptClientLogin($login, $password, $isEmail)
+    {
+        if ($isEmail) {
+            $credentials = ['email' => $login, 'password' => $password];
+        } else {
+            $credentials = ['phone_number' => $login, 'password' => $password];
+        }
+
+        if (Auth::guard('client')->attempt($credentials)) {
+            $client = Auth::guard('client')->user();
+
+            if ($client->status === StatusEnums::Disable->value) {
+                Auth::guard('client')->logout();
+                return false;
+            }
+
+            log_new("Login successful client: " . ($client->email ?? $client->phone_number));
+            return true;
+        }
+
+        return false;
     }
 
 
-    public function login(Request $request)
+    public function loginOLD(Request $request)
     {
         $attributes = $request->validate([
             'login' => ['required', 'string'], // Changed from 'email' to 'login'
@@ -106,70 +185,19 @@ class AuthController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
-    public function loginOLD(Request $request)
-    {
-
-       // dd($request->toArray());
-        $attributes = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
-
-        $key = 'login:' . Str::lower($attributes['email']) . '|' . $request->ip();
-        // Check if the user has too many failed attempts
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
-            $time = $this->formatLockoutTime($seconds);
-
-            throw ValidationException::withMessages([
-                'email' => "Too many login attempts. Please try again in {$time}.",
-            ]);
-        }
-
-
-        // Try to authenticate as a User first
-        if (Auth::attempt($attributes, $request->remember)) {
-            $user = Auth::user();
-
-            // Check if the user's status is disabled
-            if ($user->status === StatusEnums::Disable->value) {
-                log_new("Login attempt from a disabled user email: $user->email");
-                // Logout the user immediately if the status is disabled
-                Auth::logout();
-
-                throw ValidationException::withMessages([
-                    'email' => 'Your account is disabled.',
-                ]);
-            }
-
-            log_new("Login successful user email: $user->email IP: ".$request->ip());
-            RateLimiter::clear($key); // Clear failed attempts on successful login
-            $request->session()->regenerate();
-            return redirect(route('dashboard'));
-        }
-
-
-         // Increment failed attempts
-        RateLimiter::hit($key, 7200); // Lock for 2 hours after the limit
-
-        log_new("Failed login attempt email: $request->email IP: ".$request->ip());
-        throw ValidationException::withMessages([
-            'email' => 'Invalid Credentials',
-        ]);
-
-    }
-
     public function destroy(Request $request)
     {
-        Auth::logout();
+        // Check which guard is currently authenticated and logout from that guard
+        // if (Auth::guard('client')->check()) {
+        //     Auth::guard('client')->logout();
+        // } else {
+        //     Auth::logout(); // Default web guard (staff/users)
+        // }
+
+        // Logout from all guards to be safe
+        Auth::guard('web')->logout();
+        Auth::guard('client')->logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

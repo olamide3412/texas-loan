@@ -25,8 +25,10 @@ Route::inertia('/login','Auth/Login')->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 
+
+
 // Payment routes
-Route::post('/orders/{order}/initiate-payment', [PaymentController::class, 'initiatePayment'])->middleware('auth')->name('order.payment.initiate');
+Route::post('/orders/{order}/initiate-payment', [PaymentController::class, 'initiatePayment'])->middleware('auth:web,client')->name('order.payment.initiate');
 Route::get('/payment/verify/{order}', [PaymentController::class, 'verifyPayment'])->name('payment.verify');
 Route::post('/payment/webhook', [PaymentController::class, 'flwWebHook'])->name('payment.webhook');
 
@@ -42,7 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function (){
 
 });
 
-Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth')->name('logout');
+Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth:web,client')->name('logout');
 
 // Include modular route files
 require __DIR__ . '/client.php';

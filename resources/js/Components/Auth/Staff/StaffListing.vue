@@ -34,7 +34,7 @@ const isEnabled = computed(() => props.staff.user?.status === 'enable');
             <Link :href="route('staff.show', staff.id)" class=" block">
                 <div class="flex justify-between items-center">
                     <h3 class="font-bold text-lg">
-                    {{ serial }} -> {{ staff.first_name }} {{ staff.last_name }}
+                    {{ serial }} -> {{ staff.full_name }}
                     <span
                         class="rounded-xl p-1 text-xs"
                         :class="isEnabled ? 'bg-green-200 dark:bg-green-500' : 'bg-red-200 dark:bg-red-500'"

@@ -1,7 +1,28 @@
 <?php
 
+use App\Http\Controllers\Client\ClientController as ClientClientController;
 use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
+
+
+
+// Client Auth Routes
+Route::prefix('c')->group(function () {
+
+    Route::inertia('/register','Client/Register')->name('client.register');
+
+    Route::post('/register', [ClientClientController::class, 'store'])->name('client.register.store');
+
+    // Client Dashboard (protected)
+    Route::middleware(['auth:client', 'client'])->group(function () {
+         Route::get('/dashboard', [ClientClientController::class, 'dashboard'])->name('client.dashboard');
+         Route::get('/profile', [ClientClientController::class, 'profile'])->name('client.profile');
+         Route::post('/password/update', [ClientClientController::class, 'updatePassword'])->name('client.password.update');
+         Route::inertia('/password/change', 'Client/ChangePassword')->name('client.password.change');
+
+        // Add other client routes here
+    });
+});
 
 Route::middleware(['auth','admin'])->group(function () {
     // Clients

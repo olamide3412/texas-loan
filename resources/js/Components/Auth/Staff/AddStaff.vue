@@ -2,7 +2,7 @@
 import TextInput from '@/Components/Forms/TextInput.vue'
 import SelectInput from '@/Components/Forms/SelectInput.vue'
 import { useForm, usePage } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -61,6 +61,23 @@ function onPhotoChange(e) {
   previewUrl.value = URL.createObjectURL(file)
 }
 
+// Function to scroll to top
+const scrollToTop = () => {
+  nextTick(() => {
+    // Smooth scroll to top of the form container
+    const formContainer = document.querySelector('.container-xl');
+    if (formContainer) {
+      formContainer.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    // Alternative: Scroll to very top of page
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
 // Navigation functions
 const nextSection = () => {
   // Basic validation before proceeding
@@ -78,12 +95,14 @@ const nextSection = () => {
   }
   if (activeSection.value < sections.length) {
     activeSection.value++
+     scrollToTop();
   }
 }
 
 const prevSection = () => {
   if (activeSection.value > 1) {
     activeSection.value--
+     scrollToTop();
   }
 }
 
@@ -100,7 +119,7 @@ const submit = () => {
       toast.error('Validation error. Please check the highlighted fields.')
     },
     onSuccess: () => {
-      toast.success('Staff member registered successfully!')
+      //toast.success('Staff member registered successfully!')
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null
       form.reset()

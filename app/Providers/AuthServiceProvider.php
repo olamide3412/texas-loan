@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Enums\RoleEnums;
+use App\Models\Client;
+use App\Models\Order;
 use App\Models\Staff;
+use App\Policies\ClientPolicy;
+use App\Policies\OrderPolicy;
 use App\Policies\StaffPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ProvidersAuthServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +17,8 @@ class AuthServiceProvider extends ProvidersAuthServiceProvider
 {
     protected $policies = [
         Staff::class => StaffPolicy::class,
+        Client::class => ClientPolicy::class,
+        Order::class => OrderPolicy::class
 
         // Add other policies here as needed
     ];

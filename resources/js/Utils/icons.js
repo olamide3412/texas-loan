@@ -105,6 +105,37 @@ class IconUtils {
                 </svg>`;
     }
 
+    static pendingIcon() {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm1-10V7h-2v7h6v-2h-4z"/>
+                </svg>`;
+    }
+
+    static processingIcon() {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm1 14.93V13h-2v5.93A8.12 8.12 0 014 12a8 8 0 018-8c1.5 0 2.89.42 4.07 1.14L12 9h8V1l-2.58 2.58A9.94 9.94 0 0012 2z"/>
+                </svg>`;
+    }
+
+    static successIcon() {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm-2 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8z"/>
+                </svg>`;
+    }
+
+    static rejectIcon() {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0a12 12 0 1012 12A12 12 0 0012 0zm5.59 16.59L16.17 18 12 13.83 7.83 18 6.41 16.59 10.59 12 6.41 7.41 7.83 6l4.17 4.17L16.17 6l1.42 1.41L13.41 12z"/>
+                </svg>`;
+    }
+
+    static cancelIcon() {
+        return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7
+                        12 10.59 15.59 7 17 8.41 13.41 12z"/>
+                </svg>`;
+    }
+
   // You can continue adding other icons similarly...
 }
 

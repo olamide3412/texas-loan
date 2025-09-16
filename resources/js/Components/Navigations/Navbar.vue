@@ -2,8 +2,10 @@
 import { ref } from 'vue';
 import Logo from '../../../images/farm-logo.png'; // Replace with your farming brand logo
 import NavLink from '@/Components/Navigations/NavLink.vue';
-import DesktopNavLinks from '@/Components/Navigations/Auth/DesktopNavLinks.vue';
-import MobileNavLinks from '@/Components/Navigations/Auth/MobileNavLinks.vue';
+import DesktopNavLinks from '@/Components/Navigations/Staff/DesktopNavLinks.vue';
+import MobileNavLinks from '@/Components/Navigations/Staff/MobileNavLinks.vue';
+import DesktopNavLinksClient from '@/Components/Navigations/Client/DesktopNavLinks.vue';
+import MobileNavLinksClient from '@/Components/Navigations/Client/MobileNavLinks.vue';
 
 const isOpen = ref(false);
 const toggle = () => (isOpen.value = !isOpen.value);
@@ -25,10 +27,11 @@ const toggle = () => (isOpen.value = !isOpen.value);
       <ul class="hidden md:flex space-x-4">
         <NavLink :href="route('home')" :active="$page.component === 'Home'">Home</NavLink>
         <NavLink :href="route('about')" :active="$page.component === 'About'">About</NavLink>
-        <NavLink :href="route('product.home')" :active="$page.component === 'Shop'">Shop</NavLink>
+        <NavLink :href="route('product.home')" :active="$page.component === 'Shop'">Products</NavLink>
         <NavLink :href="route('faq')" :active="$page.component === 'FAQ'">FAQ</NavLink>
-        <NavLink v-if="!$page.props.auth.user" :href="route('login')" :active="$page.component === 'Login'">Login</NavLink>
+        <NavLink v-if="!$page.props.auth.check" :href="route('login')" :active="$page.component === 'Login'">Login</NavLink>
         <DesktopNavLinks v-if="$page.props.auth.user" />
+        <DesktopNavLinksClient v-if="$page.props.auth.client" />
       </ul>
 
       <button @click="toggle" class="md:hidden focus:outline-none">
@@ -60,10 +63,11 @@ const toggle = () => (isOpen.value = !isOpen.value);
         <ul class="space-y-3 text-center">
           <li><Link :href="route('home')" @click="toggle">Home</Link></li>
           <li><Link :href="route('about')" @click="toggle">About Us</Link></li>
-          <li><Link :href="route('about')" @click="toggle">Shop</Link></li>
+          <li><Link :href="route('about')" @click="toggle">Products</Link></li>
           <li><Link :href="route('faq')" @click="toggle">FAQ</Link></li>
-          <li><Link v-if="!$page.props.auth.user" :href="route('login')" @click="toggle">Login</Link></li>
+          <li><Link v-if="!$page.props.auth.check" :href="route('login')" @click="toggle">Login</Link></li>
           <MobileNavLinks v-if="$page.props.auth.user" @close="toggle" />
+          <MobileNavLinksClient v-if="$page.props.auth.client" @close="toggle" />
         </ul>
       </div>
     </transition>

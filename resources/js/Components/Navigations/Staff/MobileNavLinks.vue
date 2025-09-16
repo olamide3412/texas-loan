@@ -17,7 +17,7 @@ const liClasses = 'block px-2 py-0 text-gray-700 hover:bg-gray-100 dark:text-gra
   </li>
   <li>
     <Link :href="route('product.index')" :class="liClasses" @click="$emit('close')">
-      Products
+      Manage Products
     </Link>
   </li>
   <li>

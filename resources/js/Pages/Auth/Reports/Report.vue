@@ -169,9 +169,9 @@ const exportToCSV = () => {
                         <select v-model="filterForm.payment_method" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="">All Methods</option>
                             <option value="cash">Cash</option>
-                            <option value="transfer">Transfer</option>
+                            <option value="bank-transfer">Bank Transfer</option>
                             <option value="card">Card</option>
-                            <option value="pos">POS</option>
+                            <option value="flutterwave">Flutterwave</option>
                         </select>
                     </div>
 
@@ -181,9 +181,8 @@ const exportToCSV = () => {
                         <select v-model="filterForm.payment_status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <option value="">All Statuses</option>
                             <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
+                            <option value="success">Success</option>
                             <option value="failed">Failed</option>
-                            <option value="refunded">Refunded</option>
                         </select>
                     </div>
 
@@ -340,17 +339,17 @@ const exportToCSV = () => {
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize" :class="{
-                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': payment.payment_method === 'transfer',
+                                        'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300': payment.payment_method === 'bank-transfer',
                                         'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': payment.payment_method === 'cash',
                                         'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300': payment.payment_method === 'card',
-                                        'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300': payment.payment_method === 'pos'
+                                        'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300': payment.payment_method === 'flutterwave'
                                     }">
                                         {{ payment.payment_method }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize" :class="{
-                                        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': payment.payment_status === 'completed',
+                                        'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300': payment.payment_status === 'success',
                                         'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300': payment.payment_status === 'pending',
                                         'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300': payment.payment_status === 'failed',
                                         'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300': payment.payment_status === 'refunded'

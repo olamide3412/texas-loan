@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\ClientMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'super_admin' => SuperAdminMiddleware::class,
-            'admin' => AdminMiddleware::class
+            'admin' => AdminMiddleware::class,
+            'client' => ClientMiddleware::class,
         ]);
         $middleware->validateCsrfTokens(except:[
             'flw-webhook'

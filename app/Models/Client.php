@@ -2,15 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Str;
 
-class Client extends Model
+
+class Client extends Authenticatable
 {
+     use HasFactory, Notifiable; //SoftDeletes;
+
     protected $appends = ['full_name','full_address','client_photo'];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     public function getFullNameAttribute(){
         $firstName = $this->first_name ? ucfirst($this->first_name) : '';
@@ -28,7 +41,7 @@ class Client extends Model
 
         $fullAddress = trim("{$this->residential_address}, {$this->local_government}, {$this->state} state");
         // Optionally, you can return a placeholder if the full name is empty
-        return !empty($fullAddress) ? $fullAddress : 'No address Provided';
+        return !empty($fullAddress) ? $fullAddress  : 'No address Provided';
     }
 
     public function getClientPhotoAttribute(){

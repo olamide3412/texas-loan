@@ -2,7 +2,7 @@
 import TextInput from '@/Components/Forms/TextInput.vue'
 import SelectInput from '@/Components/Forms/SelectInput.vue'
 import { useForm, usePage } from '@inertiajs/vue3'
-import { ref, nextTick  } from 'vue'
+import { ref, nextTick, onMounted  } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -12,37 +12,45 @@ const genderEnums = usePage().props.enums.genders;
 const occupationEnums = usePage().props.enums.occupations;
 const stateEnums = usePage().props.enums.states;
 
+const turnstileWidgetId = ref(null);
+const isTurnstileLoaded = ref(false);
+const turnstileError = ref('');
+
 const previewUrl = ref(null)
 const activeSection = ref(1) // Track active section for step navigation
 const sections = [
-  { id: 1, title: "Personal Info", icon: "👤" },
-  { id: 2, title: "Contact & Address", icon: "🏠" },
-  { id: 3, title: "ID & Photo", icon: "📷" }
+  { id: 1, title: "Basic Info", icon: "👤" },
+  { id: 2, title: "Additional Details", icon: "🏠" },
+  { id: 3, title: "Verification", icon: "📷" }
 ]
 
 const form = useForm({
-  // names
+  // Required basic info
   last_name: '',
   first_name: '',
-  other_name: '',
-  // contact
-  email: '',
   phone_number: '',
-  // biodata
+  password: '',
+  password_confirmation: '',
+
+  // Optional personal info
+  other_name: '',
+  email: '',
   date_of_birth: '',
   gender: '',
-  // address
+
+  // Optional address info
   residential_address: '',
   local_government: '',
   state: '',
   occupation: '',
-  // IDs
+
+  // Optional verification info
   nin: '',
   bvn: '',
-  // finance
   annual_income: '',
-  // file
   photo: null,
+
+  cf_turnstile_response: '',
 })
 
 function onPhotoChange(e) {
@@ -73,47 +81,117 @@ const scrollToTop = () => {
 
 // Navigation functions
 const nextSection = () => {
-  // Basic validation before proceeding
-  if (activeSection.value === 1 && (!form.first_name || !form.last_name || !form.date_of_birth || !form.gender)) {
-    toast.error('Please fill in all required personal information')
+  // Only require basic info for step 1
+  if (activeSection.value === 1 && (!form.first_name || !form.last_name || !form.phone_number || !form.email || !form.password || !form.occupation)) {
+    toast.error('Please fill in all required basic information')
     return
   }
-  if (activeSection.value === 2 && (!form.email || !form.phone_number || !form.residential_address || !form.local_government || !form.state || !form.occupation)) {
-    toast.error('Please fill in all required contact and address information')
-    return
-  }
+
   if (activeSection.value < sections.length) {
-     activeSection.value++
-     scrollToTop();
+    activeSection.value++
+    scrollToTop(); // Scroll to top after changing section
   }
 }
 
 const prevSection = () => {
   if (activeSection.value > 1) {
     activeSection.value--
-    scrollToTop();
+    scrollToTop(); // Scroll to top after changing section
   }
 }
 
-const submit = () => {
-  // Final validation
-  if (!form.nin || !form.bvn || !form.annual_income) {
-    toast.error('Please complete all required identification fields')
-    return
-  }
+// Load Cloudflare Turnstile script
+const loadTurnstile = () => {
+    if (window.turnstile) {
+        renderTurnstile();
+        return;
+    }
 
-  form.post(route('client.store'), {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    script.async = true;
+    script.defer = true;
+
+    script.onload = () => {
+        isTurnstileLoaded.value = true;
+        renderTurnstile();
+    };
+
+    script.onerror = () => {
+        turnstileError.value = 'Failed to load CAPTCHA. Please refresh the page.';
+    };
+
+    document.head.appendChild(script);
+};
+// Render Turnstile widget
+const renderTurnstile = () => {
+    if (window.turnstile && document.getElementById('cf-turnstile-widget')) {
+        turnstileWidgetId.value = window.turnstile.render('#cf-turnstile-widget', {
+            sitekey: usePage().props.turnstileSiteKey,
+            callback: (token) => {
+                form.cf_turnstile_response = token;
+                turnstileError.value = '';
+            },
+            'expired-callback': () => {
+                form.cf_turnstile_response = '';
+                turnstileError.value = 'CAPTCHA expired. Please verify again.';
+                resetTurnstile();
+            },
+            'error-callback': () => {
+                form.cf_turnstile_response = '';
+                turnstileError.value = 'CAPTCHA error. Please try again.';
+                resetTurnstile();
+            }
+        });
+    }
+};
+// Reset Turnstile widget
+const resetTurnstile = () => {
+    if (window.turnstile && turnstileWidgetId.value) {
+        window.turnstile.reset(turnstileWidgetId.value);
+    }
+};
+// Reload Turnstile
+const reloadTurnstile = () => {
+    resetTurnstile();
+    form.cf_turnstile_response = '';
+    turnstileError.value = '';
+};
+// Load Turnstile when component mounts
+onMounted(() => {
+    loadTurnstile();
+});
+
+const submit = () => {
+    if (!form.cf_turnstile_response) {
+        turnstileError.value = 'Please complete the CAPTCHA verification';
+        return;
+    }
+  // No final validation required since most fields are optional
+  form.post(route('client.register.store'), {
     forceFormData: true,
-    onError: () => {
+     onFinish: () => {;
+        // Reset Turnstile after submission
+        resetTurnstile();
+    },
+    onError: (errors) => {
       //toast.error('Validation error. Please check the highlighted fields.')
+
+         // Show each error with a 800ms delay between them
       Object.values(errors).forEach((error, index) => {
         setTimeout(() => {
           toast.error(error);
         }, 800 * index);
       });
+
+       // Reset Turnstile on error
+        if (errors.cf_turnstile_response) {
+            resetTurnstile();
+            form.cf_turnstile_response = '';
+        }
+
     },
     onSuccess: () => {
-      //toast.success('Client registered successfully!')
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null
       form.reset()
@@ -125,8 +203,8 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="container-xl lg:container m-auto p-0">
-    <h1 class="title dark:text-white mb-6">Register Client</h1>
+  <div class="container-xl lg:container m-auto p-5">
+    <h1 class="title dark:text-white mb-6">Create Your Account</h1>
 
     <!-- Progress Indicator -->
     <div class="mb-6">
@@ -160,13 +238,14 @@ const submit = () => {
     </div>
 
     <form @submit.prevent="submit">
-      <!-- Section 1: Personal Information -->
+      <!-- Section 1: Basic Information (Required) -->
       <div v-if="activeSection === 1" class="mb-6">
         <h2 class="text-md font-semibold mb-3 flex items-center">
-          <span class="mr-2">👤</span> Personal Information
+          <span class="mr-2">👤</span> Basic Information
         </h2>
+        <p class="text-sm text-gray-500 mb-4">Fields marked with * are required</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-lg">
           <TextInput
             name="last_name"
             label="Last Name"
@@ -185,45 +264,10 @@ const submit = () => {
           />
           <TextInput
             name="other_name"
-            label="Other Name (optional)"
+            label="Other Name"
             v-model="form.other_name"
             :message="form.errors.other_name"
-            placeholder="Single word only"
-          />
-          <TextInput
-            name="date_of_birth"
-            label="Date of Birth"
-            type="date"
-            v-model="form.date_of_birth"
-            :message="form.errors.date_of_birth"
-            :required="true"
-          />
-          <SelectInput
-            name="gender"
-            label="Gender"
-            v-model="form.gender"
-            :options="genderEnums"
-            :message="form.errors.gender"
-            :required="true"
-          />
-        </div>
-      </div>
-
-      <!-- Section 2: Contact & Address -->
-      <div v-if="activeSection === 2" class="mb-6">
-        <h2 class="text-md font-semibold mb-3 flex items-center">
-          <span class="mr-2">🏠</span> Contact & Address
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
-          <TextInput
-            name="email"
-            label="Email"
-            type="email"
-            v-model="form.email"
-            :message="form.errors.email"
-            placeholder="name@example.com"
-            :required="true"
+            placeholder="Optional"
           />
           <TextInput
             name="phone_number"
@@ -236,29 +280,15 @@ const submit = () => {
             :required="true"
           />
           <TextInput
-            name="residential_address"
-            label="Residential Address"
-            v-model="form.residential_address"
-            :message="form.errors.residential_address"
-            :required="true"
-            class="md:col-span-2"
-          />
-          <TextInput
-            name="local_government"
-            label="Local Government"
-            v-model="form.local_government"
-            :message="form.errors.local_government"
+            name="email"
+            label="Email"
+            type="email"
+            v-model="form.email"
+            :message="form.errors.email"
+            placeholder="name@example.com"
             :required="true"
           />
-          <SelectInput
-            name="state"
-            label="State"
-            v-model="form.state"
-            :options="stateEnums"
-            :message="form.errors.state"
-            :required="true"
-          />
-          <SelectInput
+        <SelectInput
             name="occupation"
             label="Occupation"
             v-model="form.occupation"
@@ -266,24 +296,88 @@ const submit = () => {
             :message="form.errors.occupation"
             :required="true"
           />
+          <TextInput
+            name="password"
+            label="Password"
+            type="password"
+            v-model="form.password"
+            :message="form.errors.password"
+            :required="true"
+            placeholder="Create a secure password"
+          />
+          <TextInput
+            name="password_confirmation"
+            label="Confirm Password"
+            type="password"
+            v-model="form.password_confirmation"
+            :message="form.errors.password_confirmation"
+            :required="true"
+            placeholder="Confirm your password"
+          />
         </div>
       </div>
 
-      <!-- Section 3: Identification & Photo -->
+      <!-- Section 2: Additional Details (Optional) -->
+      <div v-if="activeSection === 2" class="mb-6">
+        <h2 class="text-md font-semibold mb-3 flex items-center">
+          <span class="mr-2">🏠</span> Additional Details
+        </h2>
+        <p class="text-sm text-gray-500 mb-4">All fields in this section are optional</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-lg">
+          <TextInput
+            name="date_of_birth"
+            label="Date of Birth"
+            type="date"
+            v-model="form.date_of_birth"
+            :message="form.errors.date_of_birth"
+          />
+          <SelectInput
+            name="gender"
+            label="Gender"
+            v-model="form.gender"
+            :options="genderEnums"
+            :message="form.errors.gender"
+          />
+          <TextInput
+            name="residential_address"
+            label="Residential Address"
+            v-model="form.residential_address"
+            :message="form.errors.residential_address"
+            class="md:col-span-2"
+          />
+          <TextInput
+            name="local_government"
+            label="Local Government"
+            v-model="form.local_government"
+            :message="form.errors.local_government"
+          />
+          <SelectInput
+            name="state"
+            label="State"
+            v-model="form.state"
+            :options="stateEnums"
+            :message="form.errors.state"
+          />
+
+        </div>
+      </div>
+
+      <!-- Section 3: Verification (Optional) -->
       <div v-if="activeSection === 3" class="mb-6">
         <h2 class="text-md font-semibold mb-3 flex items-center">
-          <span class="mr-2">📷</span> Identification & Photo
+          <span class="mr-2">📷</span> Verification
         </h2>
+        <p class="text-sm text-gray-500 mb-4">All fields in this section are optional. These help with faster approval.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3  rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 rounded-lg">
           <TextInput
             name="nin"
             label="NIN"
             v-model="form.nin"
             inputmode="numeric"
             :message="form.errors.nin"
-            :required="true"
-            placeholder="11 digits"
+            placeholder="11 digits (optional)"
           />
           <TextInput
             name="bvn"
@@ -291,8 +385,7 @@ const submit = () => {
             v-model="form.bvn"
             inputmode="numeric"
             :message="form.errors.bvn"
-            :required="true"
-            placeholder="11 digits"
+            placeholder="11 digits (optional)"
           />
           <TextInput
             name="annual_income"
@@ -300,13 +393,12 @@ const submit = () => {
             v-model="form.annual_income"
             inputmode="numeric"
             :message="form.errors.annual_income"
-            :required="true"
-            placeholder="e.g. 1200000"
+            placeholder="e.g. 1200000 (optional)"
             class="md:col-span-2"
           />
 
           <div class="md:col-span-2">
-            <label class="text-sm font-medium block mb-2">Photo (PNG/JPG, ≤ 5MB)</label>
+            <label class="text-sm font-medium block mb-2">Photo (optional, PNG/JPG, ≤ 5MB)</label>
             <input
               type="file"
               accept="image/png,image/jpeg"
@@ -323,8 +415,28 @@ const submit = () => {
               <p class="text-xs text-gray-500 mt-1">Image Preview</p>
             </div>
           </div>
+
         </div>
+
       </div>
+
+       <div class=" px-4">
+            <!-- Cloudflare Turnstile Widget -->
+            <div class="flex justify-left">
+                <div id="cf-turnstile-widget" class="cf-turnstile"></div>
+            </div>
+            <div v-if="turnstileError" class="text-red-600 text-sm text-center">
+                {{ turnstileError }}
+            </div>
+            <div v-if="form.errors.cf_turnstile_response" class="text-red-600 text-sm text-center">
+                {{ form.errors.cf_turnstile_response }}
+            </div>
+            <div class=" text-left">
+                <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500" @click.prevent="reloadTurnstile">
+                    Reload CAPTCHA
+                </a>
+            </div>
+        </div>
 
       <!-- Navigation Buttons -->
       <div class="flex justify-between pt-4">
@@ -353,13 +465,14 @@ const submit = () => {
           :disabled="form.processing"
           type="submit"
         >
-          <span v-if="form.processing">Registering...</span>
-          <span v-else>Register Client</span>
+          <span v-if="form.processing">Creating Account...</span>
+          <span v-else>Create Account</span>
         </button>
       </div>
 
+
       <p class="text-xs text-gray-500 mt-3">
-        Note: First/Last/Other Name must be a single word (no spaces). You may type commas in Annual Income—server will normalize it.
+        You can complete your profile later. Providing more information helps with faster verification.
       </p>
     </form>
   </div>

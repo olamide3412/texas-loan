@@ -38,7 +38,12 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth.user' => fn () => Auth::check() ? Auth::user() : null,
+            'auth' => [
+                'user' => $this->getAuthUser('web'),
+                'client' => $this->getAuthUser('client'),
+                'check' => $this->isAuthenticated(),
+                'type' => $this->getAuthType(),
+            ],
              'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
@@ -52,6 +57,24 @@ class HandleInertiaRequests extends Middleware
                 'location' => 'Kano State, Nigeria'
             ],
             'csrf_token' => csrf_token(),
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
         ];
+    }
+
+    protected function getAuthUser($guard)
+    {
+        return fn () => Auth::guard($guard)->check() ? Auth::guard($guard)->user() : null;
+    }
+
+    protected function isAuthenticated()
+    {
+        return fn () => Auth::guard('web')->check() || Auth::guard('client')->check();
+    }
+
+    protected function getAuthType()
+    {
+        if (Auth::guard('web')->check()) return 'staff';
+        if (Auth::guard('client')->check()) return 'client';
+        return null;
     }
 }

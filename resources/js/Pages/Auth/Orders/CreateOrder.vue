@@ -227,7 +227,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="p-6 bg-white dark:bg-gray-900 rounded-lg shadow">
+  <div class="p-6 pb-24 bg-white dark:bg-gray-900 rounded-lg shadow">
     <h2 class="text-xl font-bold mb-6">Create Order for {{ client.full_name }}</h2>
 
     <!-- Progress Steps -->

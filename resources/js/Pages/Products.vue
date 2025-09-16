@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { formatCurrency } from '@/Utils/formatCurrency';
+import Footer from '@/Components/Footer.vue';
 
 const props = defineProps({
     products: {
@@ -109,6 +110,8 @@ const { auth } = usePage().props;
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Check back later for new products.</p>
             </div>
         </main>
+
+        <Footer/>
     </div>
 </template>
 

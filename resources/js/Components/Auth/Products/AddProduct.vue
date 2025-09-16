@@ -32,7 +32,7 @@ const submit = () => {
       toast.error('Validation error. Please check the highlighted fields.')
     },
     onSuccess: () => {
-      toast.success('Product added successfully!')
+      //toast.success('Product added successfully!')
       if (previewUrl.value) URL.revokeObjectURL(previewUrl.value)
       previewUrl.value = null
       form.reset()

@@ -21,7 +21,7 @@ const changePassword = () => {
     passwordForm.post(route('staff.password.update'), {
         preserveScroll: true,
         onSuccess: () => {
-            toast.success('Password updated successfully');
+            //toast.success('Password updated successfully');
             passwordForm.reset();
         },
         onError: (errors) => {
@@ -53,7 +53,7 @@ const changePassword = () => {
                         </div>
                     </div>
                     <div class="md:ml-6 text-center md:text-left">
-                        <h1 class="text-2xl font-bold">{{ staff.first_name }} {{ staff.last_name }}</h1>
+                        <h1 class="text-2xl font-bold">{{ staff.full_name }}</h1>
                         <p class="text-blue-100">{{ staff.position }}</p>
                         <p class="text-blue-100">{{ staff.department }}</p>
                         <p class="text-blue-100 mt-2">Staff ID: {{ staff.staff_number }}</p>
@@ -68,7 +68,7 @@ const changePassword = () => {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div>
                         <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Full Name</h3>
-                        <p class="text-gray-900 dark:text-white">{{ staff.first_name }} {{ staff.last_name }} {{ staff.other_name || '' }}</p>
+                        <p class="text-gray-900 dark:text-white">{{ staff.full_name }}</p>
                     </div>
 
                     <div>

@@ -2,6 +2,7 @@
 
 use App\Enums\GenderEnums;
 use App\Enums\OccupationEnums;
+use App\Enums\StatusEnums;
 use App\Enums\VerificationStatusEnums;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +23,13 @@ return new class extends Migration
             $table->enum('gender', array_map(fn($gender) => $gender->value, GenderEnums::cases()))->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('phone_number')->unique()->nullable();
+
             $table->string('email')->nullable()->unique();
+            $table->string('password')->nullable();
+            $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->enum('status', array_map(fn($status) => $status->value, StatusEnums::cases()))->default(StatusEnums::Enable->value);
+
             $table->string('bvn', 11)->unique()->nullable();
             $table->string('nin', 11)->unique()->nullable();
             $table->boolean('bvn_verified')->default(false);

@@ -39,7 +39,7 @@ const orderStats = computed(() => {
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Order Details</h1>
         <p class="text-gray-600 dark:text-gray-400">Reference: {{ order.order_ref }}</p>
       </div>
-      <div class="flex space-x-3 mt-4 md:mt-0">
+      <div v-if="$page.props.auth.user" class="flex space-x-3 mt-4 md:mt-0">
         <Link
           :href="route('order.index')"
           class="btn-secondary"
@@ -49,6 +49,7 @@ const orderStats = computed(() => {
         <Link
           :href="route('order.edit', order.id)"
           class="btn-primary"
+          v-if="$page.props.auth.user"
         >
           Edit Order
         </Link>
