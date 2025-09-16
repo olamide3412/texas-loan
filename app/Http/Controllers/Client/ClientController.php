@@ -54,6 +54,7 @@ class ClientController extends Controller
 
         $validatedData = $request->validate($rules);
 
+        unset($staffData['cf_turnstile_response']);
         // Process names
         $validatedData['first_name'] = strtolower($request->input('first_name'));
         $validatedData['last_name'] = strtolower($request->input('last_name'));
