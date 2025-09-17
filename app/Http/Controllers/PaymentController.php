@@ -35,11 +35,13 @@ class PaymentController extends Controller
             }
 
             $tx_ref = 'TEXAS_ORDER_' . Str::upper(Str::random(10)) . '_' . $order->id;
+            $secret = config('services.flutterwave.secret_key');
+
 
             //dd($tx_ref);
-            // Initiate Flutterwave payment
+            // Initiate Flutterwave payment //withOptions(['force_ip_resolve' => 'v4'])->
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY'),
+                'Authorization' => 'Bearer ' . $secret,
                 'Content-Type' => 'application/json',
                 'User-Agent' => 'TexasLoan/1.0 (Laravel; PHP ' . phpversion() . ')',
                 'Accept' => 'application/json',
@@ -85,7 +87,7 @@ class PaymentController extends Controller
     public function flwWebHook(Request $request)
     {
         // Verify webhook signature
-        $secretHash = env('FLW_SECRET_HASH');
+        $secretHash = config('services.flutterwave.secret_hash');
         $signature = $request->header('verif-hash');
 
         if (!$signature || ($signature !== $secretHash)) {
@@ -109,7 +111,7 @@ class PaymentController extends Controller
         if ($payload['data']['status'] === 'successful') {
             // Verify the transaction
             $verificationResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY'),
+                'Authorization' => 'Bearer ' . config('services.flutterwave.secret_key'),
             ])->get('https://api.flutterwave.com/v3/transactions/' . $payload['data']['id'] . '/verify');
 
             $verificationData = $verificationResponse->json();
@@ -166,7 +168,7 @@ class PaymentController extends Controller
         if ($request->status === 'successful') {
             // Verify the transaction
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY'),
+                'Authorization' => 'Bearer ' . config('services.flutterwave.secret_key'),
             ])->get('https://api.flutterwave.com/v3/transactions/' . $request->transaction_id . '/verify');
 
             $responseData = $response->json();

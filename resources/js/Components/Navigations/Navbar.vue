@@ -27,9 +27,10 @@ const toggle = () => (isOpen.value = !isOpen.value);
       <ul class="hidden md:flex space-x-4">
         <NavLink :href="route('home')" :active="$page.component === 'Home'">Home</NavLink>
         <NavLink :href="route('about')" :active="$page.component === 'About'">About</NavLink>
-        <NavLink :href="route('product.home')" :active="$page.component === 'Shop'">Products</NavLink>
+        <NavLink :href="route('product.home')" :active="$page.component === 'Products'">Products</NavLink>
         <NavLink :href="route('faq')" :active="$page.component === 'FAQ'">FAQ</NavLink>
-        <NavLink v-if="!$page.props.auth.check" :href="route('login')" :active="$page.component === 'Login'">Login</NavLink>
+        <NavLink v-if="!$page.props.auth.check" :href="route('client.register')" :active="$page.component === 'Client/Register'">Sign Up</NavLink>
+        <NavLink v-if="!$page.props.auth.check" :href="route('login')" :active="$page.component === 'Auth/Login'">Sign In</NavLink>
         <DesktopNavLinks v-if="$page.props.auth.user" />
         <DesktopNavLinksClient v-if="$page.props.auth.client" />
       </ul>
@@ -65,7 +66,8 @@ const toggle = () => (isOpen.value = !isOpen.value);
           <li><Link :href="route('about')" @click="toggle">About Us</Link></li>
           <li><Link :href="route('about')" @click="toggle">Products</Link></li>
           <li><Link :href="route('faq')" @click="toggle">FAQ</Link></li>
-          <li><Link v-if="!$page.props.auth.check" :href="route('login')" @click="toggle">Login</Link></li>
+           <li><Link v-if="!$page.props.auth.check" :href="route('client.register')" @click="toggle">Sign Up</Link></li>
+          <li><Link v-if="!$page.props.auth.check" :href="route('login')" @click="toggle">Sign In</Link></li>
           <MobileNavLinks v-if="$page.props.auth.user" @close="toggle" />
           <MobileNavLinksClient v-if="$page.props.auth.client" @close="toggle" />
         </ul>

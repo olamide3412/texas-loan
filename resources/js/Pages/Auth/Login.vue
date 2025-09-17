@@ -224,7 +224,7 @@ const handleLogin = () => {
         <!-- Register Link -->
         <p class=" text-center text-sm text-gray-600 dark:text-gray-200 mt-4">
           Don't have an account?
-          <Link :href="route('client.register')" class="font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign up</Link>
+          <Link :href="route('client.register')" class="font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign Up</Link>
           <a href="/register" class=" hidden font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign up</a>
         </p>
       </div>

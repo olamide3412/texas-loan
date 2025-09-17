@@ -239,7 +239,7 @@ const submit = () => {
 
     <form @submit.prevent="submit">
       <!-- Section 1: Basic Information (Required) -->
-      <div v-if="activeSection === 1" class="mb-6">
+      <div v-if="activeSection === 1" class="mb-3">
         <h2 class="text-md font-semibold mb-3 flex items-center">
           <span class="mr-2">👤</span> Basic Information
         </h2>
@@ -318,7 +318,7 @@ const submit = () => {
       </div>
 
       <!-- Section 2: Additional Details (Optional) -->
-      <div v-if="activeSection === 2" class="mb-6">
+      <div v-if="activeSection === 2" class="mb-3">
         <h2 class="text-md font-semibold mb-3 flex items-center">
           <span class="mr-2">🏠</span> Additional Details
         </h2>
@@ -364,7 +364,7 @@ const submit = () => {
       </div>
 
       <!-- Section 3: Verification (Optional) -->
-      <div v-if="activeSection === 3" class="mb-6">
+      <div v-if="activeSection === 3" class="mb-3">
         <h2 class="text-md font-semibold mb-3 flex items-center">
           <span class="mr-2">📷</span> Verification
         </h2>
@@ -420,6 +420,14 @@ const submit = () => {
 
       </div>
 
+      <div>
+         <!-- Register Link -->
+        <p class=" text-center text-sm text-gray-600 dark:text-gray-200 mb-5">
+          Already have an account?
+          <Link :href="route('login')" class="font-medium text-primary dark:text-secondary-300 hover:text-primary-dark">Sign In</Link>
+        </p>
+      </div>
+
        <div class=" px-4">
             <!-- Cloudflare Turnstile Widget -->
             <div class="flex justify-left">
@@ -453,7 +461,7 @@ const submit = () => {
         <button
           v-if="activeSection < sections.length"
           @click="nextSection"
-          class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm"
+          class="px-4 py-2 bg-secondary-300 text-white rounded-lg hover:bg-secondary-600 transition text-sm"
           type="button"
         >
           Next →
@@ -461,7 +469,7 @@ const submit = () => {
 
         <button
           v-if="activeSection === sections.length"
-          class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm"
+          class="px-4 py-2 bg-secondary-500 text-white rounded-lg hover:bg-secondary-700 transition text-sm"
           :disabled="form.processing"
           type="submit"
         >

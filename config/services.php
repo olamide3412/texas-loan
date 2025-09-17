@@ -40,4 +40,9 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    'flutterwave' => [
+        'secret_key' => env('FLW_SECRET_KEY'),
+        'secret_hash' => env('FLW_SECRET_HASH'),
+    ],
+
 ];
