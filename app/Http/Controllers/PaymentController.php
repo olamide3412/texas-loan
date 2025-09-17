@@ -37,13 +37,10 @@ class PaymentController extends Controller
             $tx_ref = 'TEXAS_ORDER_' . Str::upper(Str::random(10)) . '_' . $order->id;
             $secretKey = config('services.flutterwave.secret_key');
 
-            Log::info('Sercret key', [$secretKey]);
-            //dd($tx_ref);
             // Initiate Flutterwave payment //withOptions(['force_ip_resolve' => 'v4'])->
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $secretKey,
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'TexasLoan/1.0 (Laravel; PHP ' . phpversion() . ')',
                 'Accept' => 'application/json',
             ])->post('https://api.flutterwave.com/v3/payments', [
                 'tx_ref' => $tx_ref,
@@ -61,29 +58,6 @@ class PaymentController extends Controller
                     //'logo' => core()->getConfigData('general.design.admin_logo.logo_image'),
                 ]
             ]);
-
-
-            //  $response = Http::withToken($secretKey)
-            //     ->post('https://api.flutterwave.com/v3/payments', [
-            //     'tx_ref' => $tx_ref,
-            //     'amount' => $order->total_price, // Use the total order amount
-            //     'currency' => 'NGN',
-            //     'redirect_url' => route('payment.verify', $order->id),
-            //     'customer' => [
-            //         'email' => $order->client->email,
-            //         'name' => $order->client->full_name,
-            //         'phonenumber' => $order->client->phone_number
-            //     ],
-            //     'payment_options' => 'card,banktransfer,ussd',
-            //     'customizations' => [
-            //         'title' =>  'Texas Loan Order Payment',
-            //         'description' => 'Payment for Order #' . $order->order_ref,
-            //         //'logo' => core()->getConfigData('general.design.admin_logo.logo_image'),
-            //     ]
-            // ]);
-
-
-
 
 
             if ($response->successful()) {
