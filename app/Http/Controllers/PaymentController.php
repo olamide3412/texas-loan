@@ -40,7 +40,7 @@ class PaymentController extends Controller
             Log::info('Sercret key', [$secret]);
             //dd($tx_ref);
             // Initiate Flutterwave payment //withOptions(['force_ip_resolve' => 'v4'])->
-            $response = Http::withHeaders([
+            $response = Http::withOptions(['force_ip_resolve' => 'v4'])->withHeaders([
                 'Authorization' => 'Bearer ' . $secret,
                 'Content-Type' => 'application/json',
                 'User-Agent' => 'TexasLoan/1.0 (Laravel; PHP ' . phpversion() . ')',
