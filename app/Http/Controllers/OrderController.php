@@ -186,10 +186,14 @@ class OrderController extends Controller
 
         //$this->authorize('createOrder', $client);
 
-        $authUser = Auth::guard('client')->user() ?? Auth::user();
+        // $authUser = Auth::guard('client')->user() ?? Auth::user();
 
-        if (! Gate::forUser($authUser)->allows('view', $order)) {
-            abort(403);
+        // if (! Gate::forUser($authUser)->allows('view', $order)) {
+        //     abort(403);
+        // }
+
+        if (Auth::guard('client')->check() && Auth::guard('client')->id() !== $order->client_id) {
+            abort(403, 'You are not authorized to access this client.');
         }
 
         $order->load('items.product', 'employmentDetail', 'client');

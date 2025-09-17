@@ -37,7 +37,7 @@ class PaymentController extends Controller
             $tx_ref = 'TEXAS_ORDER_' . Str::upper(Str::random(10)) . '_' . $order->id;
             $secret = config('services.flutterwave.secret_key');
 
-
+            Log::info('Sercret key', [$secret]);
             //dd($tx_ref);
             // Initiate Flutterwave payment //withOptions(['force_ip_resolve' => 'v4'])->
             $response = Http::withHeaders([
